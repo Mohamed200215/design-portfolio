@@ -1,0 +1,13 @@
+.claude/
+.agents/
+skills-lock.json
+dims2.js
+/Vault/
+Archive/
+Work/_originals/
+WhatsApp Image*
+UXUIVIS CV.pdf
+node_modules/
+.DS_Store
+Thumbs.db
+desktop.ini

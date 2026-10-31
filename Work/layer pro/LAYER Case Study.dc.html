@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAYER // SKINCARE ROUTINE TRACKER — MM_ARCHIVE</title>
+<meta name="description" content="LAYER — a skincare routine tracker built like a fitness app. Case study by Mohamed Muudey.">
+<link rel="icon" href="assets/layer-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --concrete-gray: #B4B4B4;
+        --warm-beige: #D9D2C5;
+        --black: #000000;
+        --off-black: #1A1A1A;
+        --white: #F2F2F2;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+    a, button, input, [role="button"] { cursor: pointer; }
+    html, body { overflow-x: hidden; min-height: 100%; }
+    img { max-width: 100%; display: block; }
+    ::selection { background: var(--black); color: var(--warm-beige); }
+
+    body {
+        background-color: var(--concrete-gray);
+        color: var(--black);
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh; width: 100vw;
+        display: flex; flex-direction: column; position: relative;
+    }
+
+    header.site-header {
+        display: grid; grid-template-columns: 1fr auto 1fr;
+        padding: 20px; border-bottom: 2px solid var(--black);
+        font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1px;
+        z-index: 10; background-color: var(--warm-beige); flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 24px; justify-content: flex-end; }
+    .nav-links a { color: var(--black); text-decoration: none; padding: 2px 8px; transition: all 0.1s; }
+    .nav-links a:hover { background: var(--black); color: var(--warm-beige); }
+
+    .archive-heading { padding: 40px; border-bottom: 4px solid var(--black); }
+    .archive-title { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 72px; text-transform: uppercase; line-height: 0.85; letter-spacing: -3px; }
+    .archive-meta { font-family: 'Space Mono', monospace; font-size: 13px; max-width: 680px; margin-top: 16px; }
+    .archive-meta .tag { display: block; opacity: 0.6; margin-bottom: 10px; font-weight: 700; }
+    .archive-meta .lede-text { font-family: 'Inter', sans-serif; font-size: 20px; line-height: 1.4; margin-top: 4px; max-width: 700px; }
+    .scroll-hint { font-family: 'Permanent Marker', cursive; font-size: 14px; opacity: 0.7; transform: rotate(-2deg); display: inline-block; margin-top: 16px; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); border-top: 3px solid var(--black); border-bottom: 3px solid var(--black); margin-top: 36px; }
+    .stat-grid > div { padding: 18px 22px; border-right: 2px solid var(--black); }
+    .stat-grid > div:last-child { border-right: none; }
+    .stat-grid .k { font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; opacity:0.6; margin-bottom:6px; }
+    .stat-grid .v { font-size: 16px; font-weight: 700; }
+
+    .gallery-scroll { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 40px 20px 80px; gap: 40px; }
+    .case-section { width: 100%; max-width: 1100px; display: flex; flex-direction: column; gap: 28px; }
+    .section-tag { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; background: var(--black); color: var(--warm-beige); padding: 6px 12px; display: inline-block; width: fit-content; text-transform: uppercase; letter-spacing: 1px; }
+    .section-heading { font-family:'Inter',sans-serif; font-weight:900; font-size: clamp(28px,4vw,42px); line-height:1.05; letter-spacing:-0.02em; max-width: 800px; }
+    .lede { font-size: 16px; line-height: 1.65; max-width: 720px; }
+
+    .process-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+    .process-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .process-row.cols-6 { grid-template-columns: repeat(6, 1fr); }
+    @media (max-width: 900px) { .process-row, .process-row.cols-2 { grid-template-columns: 1fr; } .process-row.cols-6 { grid-template-columns: repeat(3,1fr); } }
+
+    .process-block { border: 3px solid var(--black); background: var(--warm-beige); box-shadow: 6px 6px 0px var(--black); padding: 22px; }
+    .process-block.plain { background: var(--white); box-shadow: 4px 4px 0px var(--black); }
+    .process-block .frame-label { position: static; display: inline-block; margin-bottom: 12px; }
+    .process-block p { font-size: 14px; line-height: 1.6; margin: 0; }
+    .process-block ul { margin: 0; padding-left: 18px; font-size: 13.5px; line-height: 1.6; }
+    .process-block .block-title { font-size: 18px; font-weight: 700; line-height: 1.3; margin-bottom: 10px; }
+    .process-block .num { font-size: 28px; font-weight: 900; font-family:'Inter',sans-serif; margin-bottom: 10px; }
+
+    .frame-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; background: var(--black); color: var(--warm-beige); padding: 4px 10px; }
+
+    .gallery-frame { width: 100%; border: 3px solid var(--black); border-radius: 14px; box-shadow: 10px 10px 0px var(--black); background: var(--off-black); position: relative; overflow: hidden; }
+    .gallery-frame > .frame-label { position: absolute; top: 10px; left: 10px; z-index: 2; border-radius: 4px; }
+    .gallery-frame img { display: block; width: 100%; height: auto; }
+    .gallery-frame .frame-caption { padding: 12px 16px; border-top: 3px solid var(--black); background: var(--warm-beige); font-family: 'Space Mono', monospace; font-size: 12px; }
+
+    .quote-block { border: 3px solid var(--black); background: var(--white); box-shadow: 6px 6px 0px var(--black); padding: 26px 28px; }
+    .quote-block p { font-family:'Inter',sans-serif; font-size: 18px; line-height: 1.45; font-weight: 600; margin: 0 0 14px; }
+    .quote-block footer { font-family:'Space Mono', monospace; font-size: 12px; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .callout-box { border: 3px solid var(--black); padding: 30px 36px; display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap; background: var(--warm-beige); box-shadow: 8px 8px 0px var(--black); }
+    .callout-box .big { font-size: clamp(24px,4vw,38px); font-weight: 900; line-height: 1.2; font-family:'Inter',sans-serif; max-width: 900px; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+    .list-box { border: 3px solid var(--black); padding: 24px 26px; background: var(--white); box-shadow: 6px 6px 0px var(--black); }
+    .list-box .k { font-family:'Space Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+    .list-box ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.5; }
+    .list-box li { display: flex; gap: 10px; }
+
+    .table-box { border: 3px solid var(--black); box-shadow: 8px 8px 0px var(--black); background: var(--white); overflow-x: auto; }
+    .table-box table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    .table-box th { text-align: left; font-family:'Space Mono',monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 16px; border-bottom: 3px solid var(--black); background: var(--warm-beige); }
+    .table-box td { padding: 14px 16px; border-bottom: 1px solid rgba(0,0,0,0.15); vertical-align: top; }
+    .table-box tr:last-child td { border-bottom: none; }
+    .table-box td.row-head { font-weight: 700; white-space: nowrap; }
+    .table-box td.hi { font-weight: 700; }
+
+    .persona-card { border: 3px solid var(--black); background: var(--white); box-shadow: 8px 8px 0px var(--black); padding: 30px; }
+    .persona-card .k { font-family:'Space Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; }
+    .persona-card h3 { font-size: 22px; font-weight: 900; margin: 10px 0 2px; }
+    .persona-card .sub { font-family:'Space Mono',monospace; font-size: 12px; opacity: 0.6; }
+    .persona-card p.bio { font-size: 15px; line-height: 1.65; margin-top: 16px; }
+    .persona-card .sub-k { font-family:'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; margin-bottom: 8px; display: block; }
+    .persona-card ul { margin: 0 0 14px; padding-left: 18px; font-size: 14px; line-height: 1.55; }
+
+    .flow-diagram { border: 3px solid var(--black); background: var(--white); box-shadow: 8px 8px 0px var(--black); padding: 28px; display: flex; flex-direction: column; gap: 24px; }
+    .flow-row-label { font-family:'Space Mono',monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 10px; display: block; }
+    .flow-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .flow-chip { border: 2px solid var(--black); padding: 10px 14px; font-size: 12px; font-weight: 700; background: var(--warm-beige); min-width: 100px; }
+    .flow-chip.accent { background: var(--black); color: var(--warm-beige); }
+    .flow-chip .sub { display: block; font-family:'Space Mono',monospace; font-size: 9px; font-weight: 400; text-transform: uppercase; opacity: 0.65; margin-top: 3px; }
+    .flow-arrow { font-family:'Space Mono',monospace; opacity: 0.5; }
+
+    .step-row { display: grid; grid-template-columns: 90px 1fr; gap: 20px; padding: 20px 0; border-top: 2px solid var(--black); align-items: baseline; }
+    .step-row .step-num { font-family:'Space Mono',monospace; font-size: 11px; font-weight: 700; }
+    .step-row h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .step-row p { font-size: 14px; line-height: 1.6; }
+
+    .compare-pair { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+    .compare-pair .cell { width: 240px; flex: none; border: 2px solid var(--black); border-radius: 12px; overflow: hidden; background: var(--white); }
+    .compare-pair .cell img { width: 100%; height: auto; display: block; }
+    .compare-pair .cell .cap { padding: 9px 11px; font-family:'Space Mono',monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; background: var(--warm-beige); border-top: 2px solid var(--black); text-align: center; }
+    .compare-pair .cell.old .cap { opacity: 0.6; }
+
+    .iter-row { display: flex; flex-direction: column; gap: 22px; }
+    .iter-row .iter-text { width: 100%; }
+    .iter-row .compare-pair { width: 100%; margin-top: 4px; }
+
+    .color-chip { border: 2px solid var(--black); }
+    .color-chip .swatch { height: 100px; border-bottom: 2px solid var(--black); }
+    .color-chip .info { padding: 12px; background: var(--white); }
+    .color-chip .name { font-size: 13px; font-weight: 700; }
+    .color-chip .hex { font-family:'Space Mono',monospace; font-size: 11px; opacity: 0.6; display: block; margin: 4px 0; }
+    .color-chip .use { font-size: 11px; opacity: 0.55; }
+
+    .type-specimen { border: 3px solid var(--black); background: var(--white); box-shadow: 6px 6px 0px var(--black); padding: 26px; }
+    .type-specimen .k { font-family:'Space Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; }
+    .type-specimen .sample { font-size: 48px; font-weight: 700; margin: 14px 0; line-height: 1; }
+
+    .rank-row { display: grid; grid-template-columns: minmax(0,1.3fr) minmax(0,1fr); gap: 24px; padding: 20px 0; border-top: 2px solid var(--black); }
+    @media (max-width: 700px) { .rank-row { grid-template-columns: 1fr; } }
+    .rank-row .num { font-family:'Space Mono',monospace; font-size: 11px; font-weight: 700; opacity: 0.6; }
+    .rank-row h4 { font-size: 16px; font-weight: 700; margin: 6px 0 8px; }
+    .rank-row p { font-size: 14px; line-height: 1.6; }
+    .rank-row .badge { font-family:'Space Mono',monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .rank-row .result { font-size: 13.5px; margin-top: 6px; }
+
+    .back-to-archive { display: inline-block; margin-top: 8px; padding: 14px 28px; border: 2px solid var(--black); background: var(--warm-beige); color: var(--black); font-family: 'Space Mono', monospace; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; box-shadow: 6px 6px 0px var(--black); transition: all 0.15s; }
+    .back-to-archive:hover { background: var(--black); color: var(--warm-beige); transform: translate(-3px, -3px); box-shadow: 9px 9px 0px var(--black); }
+    .site-footer-note { font-family:'Space Mono', monospace; font-size: 11px; opacity: 0.6; margin-bottom: 14px; }
+
+    .footer-contact { display: flex; flex-wrap: wrap; gap: 40px; margin-bottom: 24px; }
+    .footer-contact .col { display: flex; flex-direction: column; gap: 6px; }
+    .footer-contact .k { font-family:'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.6; }
+    .footer-contact a, .footer-contact span.v { font-size: 14px; color: var(--black); }
+
+    @media (max-width: 640px) {
+        header.site-header { grid-template-columns: 1fr; gap: 8px; text-align: center; padding: 12px 16px; }
+        .nav-links { justify-content: center; flex-wrap: wrap; gap: 10px 16px; }
+        .archive-heading { padding: 24px 18px; }
+        .archive-title { font-size: 15vw; }
+        .stat-grid { grid-template-columns: repeat(2,1fr); }
+        .stat-grid > div:nth-child(2n) { border-right: none; }
+        .stat-grid > div:nth-child(-n+2) { border-bottom: 2px solid var(--black); }
+        .compare-pair .cell { width: 42%; max-width: 220px; }
+        .gallery-scroll { padding: 24px 12px 60px; gap: 28px; }
+    }
+</style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="status">SYSTEM: ACTIVE // 124.0.0.1</div>
+        <div class="logo">MM_UXUI_PRD_DSGN</div>
+        <nav class="nav-links">
+            <a href="../../index.html#home">HOME</a>
+            <a href="../../About/index.html">ABOUT/PERSONAL</a>
+            <a href="../../index.html#archive" style="background: var(--black); color: var(--warm-beige);">ARCHIVE</a>
+            <a href="../../index.html#contact">CONTACT</a>
+        </nav>
+    </header>
+
+    <div class="archive-heading" id="top">
+        <h1 class="archive-title">Layer.</h1>
+        <div class="archive-meta">
+            <span class="tag">CASE STUDY // SOLO PROJECT</span>
+            <p class="lede-text">Skincare, in order — a routine tracker for people who already track everything else.</p>
+            <span class="scroll-hint">scroll down ↓</span>
+        </div>
+
+        <div class="stat-grid">
+            <div><div class="k">Role</div><div class="v">UX/UI Designer (solo)</div></div>
+            <div><div class="k">Timeline</div><div class="v">One week</div></div>
+            <div><div class="k">Tools</div><div class="v">Figma variables, conditional prototyping, Claude</div></div>
+            <div><div class="k">Scope</div><div class="v">18 screens, light + dark</div></div>
+        </div>
+
+        <nav class="toc" aria-label="Case study sections" style="display:flex; flex-wrap:wrap; row-gap:8px; font-size:12px; font-family:'Space Mono', monospace; letter-spacing:0.04em; text-transform:uppercase; margin-top:32px; padding-top:20px; border-top:2px solid var(--black);">
+            <span style="opacity:0.6; margin-right:18px">On this page</span>
+            <a href="#overview" style="color:var(--black); text-decoration:none">Overview</a><span style="opacity:0.4; margin:0 12px">/</span>
+            <a href="#problem" style="color:var(--black); text-decoration:none">Problem</a><span style="opacity:0.4; margin:0 12px">/</span>
+            <a href="#research" style="color:var(--black); text-decoration:none">Research</a><span style="opacity:0.4; margin:0 12px">/</span>
+            <a href="#personas" style="color:var(--black); text-decoration:none">Personas</a><span style="opacity:0.4; margin:0 12px">/</span>
+            <a href="#flows" style="color:var(--black); text-decoration:none">Flows</a><span style="opacity:0.4; margin:0 12px">/</span>
+            <a href="#iteration" style="color:var(--black); text-decoration:none">Iteration</a><span style="opacity:0.4; margin:0 12px">/</span>
+            <a href="#brand" style="color:var(--black); text-decoration:none">Brand</a><span style="opacity:0.4; margin:0 12px">/</span>
+            <a href="#prototype" style="color:var(--black); text-decoration:none">Prototype</a><span style="opacity:0.4; margin:0 12px">/</span>
+            <a href="#outcomes" style="color:var(--black); text-decoration:none">Outcomes</a>
+        </nav>
+    </div>
+
+    <main class="gallery-scroll">
+
+        <div class="gallery-frame" style="background:#7C8B6F">
+            <span class="frame-label">COVER</span>
+            <img src="assets/cover-phones.png" alt="The LAYER splash screen in light and dark mode on two iPhone 16 Pro">
+            <div class="frame-caption">The LAYER splash screen in light and dark mode.</div>
+        </div>
+
+        <!-- SUMMARY -->
+        <section class="case-section">
+            <span class="section-tag">Summary</span>
+            <div class="process-row">
+                <div class="process-block">
+                    <div class="num">01</div>
+                    <p>Skincare treated as a routine you log, using the mental model of a gym app.</p>
+                </div>
+                <div class="process-block">
+                    <div class="num">02</div>
+                    <p>Three taps to log a full routine, with the layering order enforced by the app.</p>
+                </div>
+                <div class="process-block">
+                    <div class="num">03</div>
+                    <p>Buying lives on its own branch: search, bag and checkout, kept out of the daily log.</p>
+                </div>
+            </div>
+            <div class="process-row cols-6">
+                <div class="gallery-frame"><img src="assets/screens/onboarding.png" alt="Skin-type onboarding screen"><div class="frame-caption" style="font-size:10px; padding:8px 10px">Onboarding</div></div>
+                <div class="gallery-frame"><img src="assets/screens/log-am.png" alt="Morning routine log, two of five steps complete"><div class="frame-caption" style="font-size:10px; padding:8px 10px">AM routine</div></div>
+                <div class="gallery-frame"><img src="assets/screens/log-pm.png" alt="Evening routine log"><div class="frame-caption" style="font-size:10px; padding:8px 10px">PM routine</div></div>
+                <div class="gallery-frame"><img src="assets/screens/progress.png" alt="Progress screen with an 18-day streak"><div class="frame-caption" style="font-size:10px; padding:8px 10px">Streak</div></div>
+                <div class="gallery-frame"><img src="assets/screens/shelf.png" alt="Product shelf with low-stock warning"><div class="frame-caption" style="font-size:10px; padding:8px 10px">Shelf</div></div>
+                <div class="gallery-frame"><img src="assets/screens/builder.png" alt="Routine builder with drag-to-reorder steps"><div class="frame-caption" style="font-size:10px; padding:8px 10px">Builder</div></div>
+            </div>
+        </section>
+
+        <!-- OVERVIEW -->
+        <section class="case-section" id="overview">
+            <span class="section-tag">Section 02 — Overview</span>
+            <h2 class="section-heading">What LAYER is</h2>
+            <div class="two-col">
+                <div class="process-block plain">
+                    <span class="frame-label">THE SHORT VERSION</span>
+                    <p style="margin-top:12px">Most skincare apps are built around discovery and shopping: quizzes, product recommendations, affiliate links. Almost none are built around the boring, essential part: actually doing the routine, in the right order, every day. LAYER is a stripped-down tracker that treats skincare the way a gym app treats a workout — as a routine you log, not a catalog you browse. Shopping does exist in the app, but on a separate branch: a personalised starter kit generated from your skin type, then search, bag and checkout, all deliberately kept out of the daily log.</p>
+                </div>
+                <div class="process-block plain">
+                    <span class="frame-label">WHY I MADE THIS</span>
+                    <p style="margin-top:12px">I already track my training and my macros closely, but my skincare routine lived nowhere. No order, no consistency check, no sense of whether it was actually working over time. If I wanted that structure for lifting and eating, why not for the one routine I was most inconsistent with?</p>
+                </div>
+            </div>
+            <div class="process-row">
+                <div class="process-block">
+                    <span class="frame-label">CONSTRAINTS</span>
+                    <p style="margin-top:12px">One week, working solo, with no engineering support and no access to real product data. Everything here is designed to be judged as a prototype, not shipped.</p>
+                </div>
+                <div class="process-block">
+                    <span class="frame-label">DELIBERATELY LEFT OUT</span>
+                    <ul style="margin-top:12px">
+                        <li>An ingredient database and conflict warnings. Useful, but it turns the app back into a reference tool.</li>
+                        <li>Progress photos. High effort per day, and the payoff is too slow to support a daily habit.</li>
+                        <li>Real inventory sync. The low-stock warning is a designed state, not a working count.</li>
+                    </ul>
+                </div>
+                <div class="process-block">
+                    <span class="frame-label">LEAST SURE ABOUT</span>
+                    <p style="margin-top:12px">Enforcing a fixed step order makes the routine legible, but it assumes the user's order is correct. Someone with a dermatologist-set routine may find it rigid.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROBLEM -->
+        <section class="case-section" id="problem">
+            <span class="section-tag">Section 03 — Problem</span>
+            <h2 class="section-heading">Buying the products is easy. Using them consistently isn't.</h2>
+            <p class="lede">People end up with a shelf of products and no order to apply them in, no record of what they used, and no way to tell whether anything is working. Skincare apps answer the shopping question. Almost none of them answer the habit question.</p>
+            <div class="process-row">
+                <div class="process-block">
+                    <div class="num">01</div>
+                    <div class="block-title">No order to follow</div>
+                    <p>Products arrive with instructions on the bottle, not as a sequence. Cleanser, serum, moisturiser, SPF — the order matters and nothing holds it.</p>
+                </div>
+                <div class="process-block">
+                    <div class="num">02</div>
+                    <div class="block-title">Nothing gets recorded</div>
+                    <p>Without a log there is no streak, no memory of last night, and no evidence to connect a change in skin to a change in routine.</p>
+                </div>
+                <div class="process-block">
+                    <div class="num">03</div>
+                    <div class="block-title">Advice replaces tracking</div>
+                    <p>Existing apps push recommendations and reviews. The daily act of actually doing the routine is left entirely to the user.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESEARCH -->
+        <section class="case-section" id="research">
+            <span class="section-tag">Section 04 — Research</span>
+            <h2 class="section-heading">The inspiration was fitness apps, not skincare apps</h2>
+
+            <div class="table-box">
+                <table>
+                    <tr><th></th><th>Ordering</th><th>Streaks</th><th>Inventory</th><th>Tone</th></tr>
+                    <tr><td class="row-head">Skincare apps</td><td>Not enforced</td><td>None</td><td>Wishlists, not a shelf</td><td>Retail</td></tr>
+                    <tr><td class="row-head">Fitness trackers</td><td>Sets in sequence</td><td>Core feature</td><td>Not applicable</td><td>Performance</td></tr>
+                    <tr><td class="row-head">Habit trackers</td><td>Flat checklist</td><td>Core feature</td><td>None</td><td>Neutral</td></tr>
+                    <tr><td class="row-head hi">LAYER</td><td class="hi">Enforced, auto-corrected</td><td class="hi">Day streak + progress</td><td class="hi">Shelf with running-low</td><td>Clinical, warm</td></tr>
+                </table>
+            </div>
+
+            <div class="two-col">
+                <div class="process-block plain">
+                    <span class="frame-label">COMPETITIVE ANALYSIS</span>
+                    <p style="margin:12px 0 16px">I looked at three categories of app, not only skincare competitors.</p>
+                    <p style="margin-bottom:10px"><strong>Skincare apps</strong> — Strong on product discovery, weak on daily-use tracking.</p>
+                    <p style="margin-bottom:10px"><strong>Fitness trackers</strong> — Hevy, Nike Training Club, the same two I compared in my dissertation. Strong on streaks, logging, progress-over-time framing.</p>
+                    <p><strong>Habit trackers</strong> — Strong on simple daily check-ins, weak on anything routine-specific like step order.</p>
+                </div>
+                <div class="process-block plain">
+                    <span class="frame-label">INFORMAL USER INTERVIEWS</span>
+                    <p style="margin:12px 0 12px">Eight people, mostly men aged 20–30 who train regularly. Fifteen-minute conversations, either in person or over voice note, walking through what they own, what they actually do each day, and where it fell apart. Recurring findings:</p>
+                    <ul>
+                        <li>Almost everyone had tried a routine and let it lapse within a few weeks.</li>
+                        <li>The biggest friction wasn't knowing what to buy. It was remembering the order and doing it consistently.</li>
+                        <li>Several explicitly compared it to missing gym sessions.</li>
+                        <li>Six of the eight owned a product they had stopped using because they were unsure where it went in the order.</li>
+                        <li>Nobody wanted advice in the app. They wanted confirmation they had done it.</li>
+                        <li>PM was the session that got skipped, not AM. Tiredness, not forgetfulness.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="quote-block">
+                <p>"I'd never skip leg day, but I've gone a week without touching my serum and not noticed."</p>
+            </div>
+
+            <div class="callout-box">
+                <div class="big">Key insight: the unlock isn't more product information. It's the behavioural hook that makes a gym log work — visible consistency, low-friction daily logging, and a sense of streak.</div>
+            </div>
+        </section>
+
+        <!-- PERSONAS -->
+        <section class="case-section" id="personas">
+            <span class="section-tag">Section 05 — Personas</span>
+            <h2 class="section-heading">Two people, one habit gap</h2>
+            <p class="lede">Both came out of the interviews. Neither needs a product recommendation. What they need is the routine to be legible and the doing of it to be recorded.</p>
+
+            <div class="two-col">
+                <div class="persona-card">
+                    <span class="k">Primary persona</span>
+                    <h3>The Disciplined Beginner</h3>
+                    <span class="sub">Marcus, 24 — graduate analyst, trains 4–5× a week</span>
+                    <p class="bio">Logs every set in Hevy and weighs his food, but his skincare is three or four products on a shelf used whenever he remembers. Bought them on a recommendation, never learned the order. Wants structure, not education.</p>
+                    <div style="margin-top:20px">
+                        <span class="sub-k">Goals</span>
+                        <ul><li>A fixed AM and PM sequence he doesn't have to think about.</li><li>Evidence it is working, in the same shape as a training log.</li></ul>
+                        <span class="sub-k">Frustrations</span>
+                        <ul><li>Every app he tried opened on a quiz or a shop.</li><li>No idea whether serum goes before or after moisturiser.</li></ul>
+                    </div>
+                    <div class="quote-block" style="margin-top:6px; box-shadow:none; padding:16px 18px">
+                        <p style="font-size:15px; margin:0">"Just tell me the order and let me tick it off."</p>
+                    </div>
+                </div>
+                <div class="persona-card">
+                    <span class="k">Secondary persona</span>
+                    <h3>The Relapsed Starter</h3>
+                    <span class="sub">Dan, 28 — trades shifts, trains when the rota allows</span>
+                    <p class="bio">Ran a full five-step routine for two months after a breakout, then dropped it once his skin cleared. Six months on, half the products are out of date and he isn't sure which ones still work. Wants accountability past the flare-up, not another fresh start.</p>
+                    <div style="margin-top:20px">
+                        <span class="sub-k">Goals</span>
+                        <ul><li>A reason to keep going on the nights he can't be bothered.</li><li>To know what he already owns before buying anything else.</li></ul>
+                        <span class="sub-k">Frustrations</span>
+                        <ul><li>Habit apps treat one missed day as a failed streak.</li><li>Progress is invisible day to day, so it feels pointless.</li></ul>
+                    </div>
+                    <div class="quote-block" style="margin-top:6px; box-shadow:none; padding:16px 18px">
+                        <p style="font-size:15px; margin:0">"It worked, so I stopped. That's the whole problem."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FLOWS / IA -->
+        <section class="case-section" id="flows">
+            <span class="section-tag">Section 06 — Information Architecture &amp; User Flow</span>
+            <h2 class="section-heading">Three taps to log a full routine</h2>
+            <p class="lede">The core logging flow is kept deliberately shallow. The shop path branches off onboarding and the shelf, never out of the daily log.</p>
+
+            <div class="flow-diagram">
+                <div>
+                    <span class="flow-row-label">Daily loop</span>
+                    <div class="flow-chips">
+                        <div class="flow-chip">Splash</div><span class="flow-arrow">→</span>
+                        <div class="flow-chip">Onboarding<span class="sub">3 steps</span></div><span class="flow-arrow">→</span>
+                        <div class="flow-chip accent">Starter kit<span class="sub">oily / dry / combination</span></div><span class="flow-arrow">→</span>
+                        <div class="flow-chip">Build routine</div><span class="flow-arrow">→</span>
+                        <div class="flow-chip accent">Daily log<span class="sub">AM / PM</span></div><span class="flow-arrow">→</span>
+                        <div class="flow-chip">Streak</div>
+                    </div>
+                </div>
+                <div style="border-top:2px dashed rgba(0,0,0,0.3); padding-top:6px; font-family:'Space Mono',monospace; font-size:10px; text-transform:uppercase; opacity:0.6">Branches off onboarding and the shelf</div>
+                <div>
+                    <span class="flow-row-label" style="color:#7a5030">Shop branch</span>
+                    <div class="flow-chips">
+                        <div class="flow-chip">Shelf</div><span class="flow-arrow">→</span>
+                        <div class="flow-chip">Search</div><span class="flow-arrow">→</span>
+                        <div class="flow-chip">Product detail</div><span class="flow-arrow">→</span>
+                        <div class="flow-chip">Bag</div><span class="flow-arrow">→</span>
+                        <div class="flow-chip accent">Order confirmed</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="width:100%">
+                <div class="step-row"><span class="step-num">STEP 01</span><div><h4>Onboarding</h4><p>Three steps: skin type, concerns, products you already own. Skin type is stored as a Figma variable, so oily, dry and combination/normal each route to a different starter kit.</p></div></div>
+                <div class="step-row"><span class="step-num">STEP 02</span><div><h4>Build routine</h4><p>Drag products into AM/PM order. The app enforces correct layering order automatically.</p></div></div>
+                <div class="step-row"><span class="step-num">STEP 03</span><div><h4>Daily log</h4><p>One-tap check-off per step. The whole routine marks complete when every step is done.</p></div></div>
+                <div class="step-row"><span class="step-num">STEP 04</span><div><h4>Streak / progress</h4><p>A simple day-count streak in the same visual language as a gym streak, plus an optional weekly progress photo.</p></div></div>
+                <div class="step-row"><span class="step-num">STEP 05</span><div><h4>Product shelf</h4><p>An inventory of what you own, with a flag when something is running low.</p></div></div>
+                <div class="step-row" style="border-bottom:2px solid var(--black)"><span class="step-num">STEP 06</span><div><h4>Restock</h4><p>Reached from the shelf or the starter kit: search with live results, product detail, a bag with quantity steppers and a price summary, then order confirmation.</p></div></div>
+            </div>
+
+            <div>
+                <span class="frame-label" style="width:fit-content">THE SHOP BRANCH</span>
+                <p class="lede" style="margin-top:14px">Buying is real but deliberately off the daily path. It opens once from onboarding as a generated starter kit, and after that only from the shelf when something runs low.</p>
+            </div>
+            <div class="process-row cols-6" style="grid-template-columns:repeat(4,1fr)">
+                <div class="gallery-frame"><img src="assets/screens/shop-kit.png" alt="The generated starter kit from onboarding"><div class="frame-caption" style="font-size:10px; padding:8px 10px">Starter kit</div></div>
+                <div class="gallery-frame"><img src="assets/screens/shop-search.png" alt="Product search results"><div class="frame-caption" style="font-size:10px; padding:8px 10px">Search</div></div>
+                <div class="gallery-frame"><img src="assets/screens/shop-bag.png" alt="The bag with subtotal and checkout"><div class="frame-caption" style="font-size:10px; padding:8px 10px">Bag</div></div>
+                <div class="gallery-frame"><img src="assets/screens/shop-confirm.png" alt="Order placed confirmation"><div class="frame-caption" style="font-size:10px; padding:8px 10px">Order placed</div></div>
+            </div>
+        </section>
+
+        <!-- ITERATION -->
+        <section class="case-section" id="iteration">
+            <span class="section-tag">Section 07 — Iteration</span>
+            <h2 class="section-heading">What changed, and why</h2>
+            <p class="lede">Three decisions that did not survive first contact. Each one came out of watching someone use the prototype rather than out of the brief.</p>
+
+            <div class="process-block plain" style="max-width:100%">
+                <div class="iter-row">
+                    <div class="iter-text">
+                        <div class="num">01</div>
+                        <div class="block-title">The AM and PM switch</div>
+                        <p>The first build put morning and evening on two separate tabs in the bottom bar. Testers kept landing on the wrong one, because the app opens on whichever session is due and the tab did not move with it. The toggle moved up next to the heading, where it reads as a property of the routine rather than a place in the app.</p>
+                    </div>
+                    <div class="compare-pair">
+                        <div class="cell old"><img src="assets/screens/iter-1a-tabs.png" alt="Version one with separate Morning and Evening tabs in the bottom bar"><div class="cap">v1 — separate tabs</div></div>
+                        <div class="cell"><img src="assets/screens/iter-1b-toggle.png" alt="Version two with an inline AM PM toggle under the heading"><div class="cap">v2 — inline toggle</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-block plain" style="max-width:100%">
+                <div class="iter-row">
+                    <div class="iter-text">
+                        <div class="num">02</div>
+                        <div class="block-title">Step completion</div>
+                        <p>Checkboxes made the list feel like a shopping list, and hid the thing that matters most: the order. Numbering each step and filling the ring on completion keeps the sequence legible whether a step is done or not.</p>
+                    </div>
+                    <div class="compare-pair">
+                        <div class="cell old"><img src="assets/screens/iter-2a-checkbox.png" alt="Version one of the morning log, with a checkbox column"><div class="cap">v1 — checkbox column</div></div>
+                        <div class="cell"><img src="assets/screens/iter-2b-rings.png" alt="Version two of the morning log, with numbered rings"><div class="cap">v2 — numbered rings</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-block plain" style="max-width:100%">
+                <div class="iter-row">
+                    <div class="iter-text">
+                        <div class="num">03</div>
+                        <div class="block-title">The streak</div>
+                        <p>A running count in the header was easy to ignore and, on a missed day, felt punitive. Moving it to its own screen with the ring, the week strip and four-week completion gives the number context — a missed day reads as one gap in a pattern rather than a reset to zero.</p>
+                    </div>
+                    <div class="compare-pair">
+                        <div class="cell old"><img src="assets/screens/iter-3a-header.png" alt="Version one with the streak count in the header"><div class="cap">v1 — number in header</div></div>
+                        <div class="cell"><img src="assets/screens/iter-3b-progress.png" alt="Version two with the streak on its own progress screen"><div class="cap">v2 — progress screen</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BRAND -->
+        <section class="case-section" id="brand">
+            <span class="section-tag">Section 08 — Brand</span>
+            <h2 class="section-heading">Brand identity</h2>
+            <p class="lede">Clinical-but-warm: product-label typography and ingredient-list precision, structured like a lab, softened by warm neutral tones. Not another pastel wellness app, and not a streetwear drop.</p>
+
+            <div class="two-col">
+                <div class="process-block" style="display:flex; flex-direction:column; justify-content:space-between; gap:24px; min-height:220px">
+                    <span class="frame-label">PRIMARY LOCKUP</span>
+                    <img src="assets/layer-mark.png" alt="LAYER mark" style="width:90px">
+                </div>
+                <div class="process-block" style="background:var(--off-black); color:var(--warm-beige); display:flex; flex-direction:column; justify-content:space-between; gap:24px; min-height:220px">
+                    <span class="frame-label" style="background:var(--warm-beige); color:var(--black)">REVERSED</span>
+                    <img src="assets/layer-mark.png" alt="" style="width:90px; filter:brightness(0) invert(1)">
+                </div>
+            </div>
+
+            <div class="process-row">
+                <div class="process-block plain">
+                    <span class="frame-label">APP ICON</span>
+                    <div style="margin-top:16px; width:100px; height:100px; border:2px solid var(--black); display:flex; align-items:center; justify-content:center; overflow:hidden">
+                        <img src="assets/app-icon-light.png" alt="" style="width:100%; height:100%; object-fit:contain">
+                    </div>
+                </div>
+                <div class="process-block" style="background:var(--off-black)">
+                    <span class="frame-label">APP ICON — DARK</span>
+                    <div style="margin-top:16px; width:100px; height:100px; display:flex; align-items:center; justify-content:center; overflow:hidden">
+                        <img src="assets/app-icon-dark.png" alt="" style="width:100%; height:100%; object-fit:contain">
+                    </div>
+                </div>
+                <div class="process-block plain">
+                    <span class="frame-label">MINIMUM SIZE</span>
+                    <div style="margin-top:16px; display:flex; align-items:flex-end; gap:16px">
+                        <img src="assets/layer-mark.png" alt="" style="width:48px">
+                        <img src="assets/layer-mark.png" alt="" style="width:30px">
+                        <img src="assets/layer-mark.png" alt="" style="width:20px">
+                    </div>
+                    <p style="margin-top:14px">The mark holds at 30px in the app tab bar. Below 20px the interior linework closes up.</p>
+                </div>
+            </div>
+
+            <div class="gallery-frame">
+                <span class="frame-label">BRAND IN THE WORLD</span>
+                <div style="display:grid; grid-template-columns:repeat(12,1fr); gap:6px; padding:6px; background:var(--black)">
+                    <img src="assets/brand-astand.png" alt="" style="grid-column:span 6; aspect-ratio:3/2; object-fit:cover">
+                    <img src="assets/brand-storefront.png" alt="" style="grid-column:span 6; aspect-ratio:3/2; object-fit:cover">
+                    <img src="assets/brand-surfboard.png" alt="" style="grid-column:span 4; aspect-ratio:1/1; object-fit:cover">
+                    <img src="assets/brand-bottle.png" alt="" style="grid-column:span 4; aspect-ratio:1/1; object-fit:cover">
+                    <img src="assets/brand-homescreen.png" alt="" style="grid-column:span 4; aspect-ratio:1/1; object-fit:cover">
+                    <img src="assets/brand-cups.png" alt="" style="grid-column:span 12; aspect-ratio:3/2; object-fit:cover">
+                </div>
+            </div>
+
+            <div class="process-row">
+                <div class="process-block plain">
+                    <span class="frame-label">TOKENS</span>
+                    <p style="margin-top:14px">Nine variables across two collections. Colors holds eight — background/bone, background/bone-dark, text/ink, text/ink-muted, accent/sage, accent/sage-tint, accent/clay, divider/silver — each with a light and a dark value. App State holds one string, skinType. No raw hex values anywhere in the file.</p>
+                </div>
+                <div class="process-block plain">
+                    <span class="frame-label">COMPONENTS</span>
+                    <p style="margin-top:14px">Ten component families, all variant-driven: Button (2 styles × 3 states), Step Row (4 states), Bottom Nav Bar (4 tabs), Progress Ring (5 percentages), Product Card (full stock / running low), AM/PM Toggle, Input Field, Reminder Toggle. A Status Bar and Home Indicator pair keeps the iOS chrome accurate across every screen.</p>
+                </div>
+                <div class="process-block plain">
+                    <span class="frame-label">DARK MODE</span>
+                    <p style="margin-top:14px">Built as a real Figma variable mode rather than a duplicated set of screens, so all 18 screens re-theme at once onto near-black #0A0A09 as the primary surface.</p>
+                </div>
+            </div>
+
+            <div>
+                <span class="frame-label" style="width:fit-content">PALETTE</span>
+                <div class="process-row cols-6" style="margin-top:16px">
+                    <div class="color-chip"><div class="swatch" style="background:#F4F1EC"></div><div class="info"><span class="name">Bone white</span><span class="hex">#F4F1EC</span><span class="use">Background</span></div></div>
+                    <div class="color-chip"><div class="swatch" style="background:#EAE6DD"></div><div class="info"><span class="name">Bone dark</span><span class="hex">#EAE6DD</span><span class="use">Raised surface</span></div></div>
+                    <div class="color-chip"><div class="swatch" style="background:#232320"></div><div class="info"><span class="name">Charcoal</span><span class="hex">#232320</span><span class="use">Ink / text</span></div></div>
+                    <div class="color-chip"><div class="swatch" style="background:#7C8B6F"></div><div class="info"><span class="name">Sage</span><span class="hex">#7C8B6F</span><span class="use">Primary accent</span></div></div>
+                    <div class="color-chip"><div class="swatch" style="background:#C4785A"></div><div class="info"><span class="name">Clay</span><span class="hex">#C4785A</span><span class="use">Secondary accent</span></div></div>
+                    <div class="color-chip"><div class="swatch" style="background:#B8B6AF"></div><div class="info"><span class="name">Brushed silver</span><span class="hex">#B8B6AF</span><span class="use">Icons, dividers</span></div></div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="type-specimen">
+                    <span class="k">Display — Mont</span>
+                    <div class="sample" style="font-weight:200">Aa 0123</div>
+                    <p>Geometric sans. Wordmark, section headers, editorial lines. Heavy 900 sets the wordmark. Two cuts only: ExtraLight 200 for anything large, Heavy 900 for the wordmark, nothing in between. Inside the app itself the display type is Fraunces Bold, set at 20–44px for screen titles and streak counts.</p>
+                </div>
+                <div class="type-specimen">
+                    <span class="k">Body — Instrument Sans</span>
+                    <div class="sample" style="font-weight:500">Aa 0123</div>
+                    <p>Neutral grotesk for body copy and UI. Set small, uppercase and letterspaced for step labels. Monospace handles hex values and data. The app UI runs on Inter Regular and Semi Bold, mostly at 12 and 14px.</p>
+                </div>
+            </div>
+
+            <div class="process-block plain" style="max-width:100%">
+                <span class="frame-label">DARK MODE</span>
+                <p style="margin:14px 0 20px">Dark is a variable mode, not a second design. Every colour in the file resolves through nine tokens, so all 18 screens re-theme from one switch and no component carries a hard-coded hex. The sage stays constant across both modes; the surfaces and ink swap around it. The one place it is not a straight swap: the completed-step ring. At full sage on a dark surface it read as an error state, so the dark mode fills it at reduced weight with a lighter tick.</p>
+                <div class="compare-pair">
+                    <div class="cell"><img src="assets/screens/am-light.png" alt="The AM routine in light mode"><div class="cap">Light</div></div>
+                    <div class="cell"><img src="assets/screens/am-dark.png" alt="The same AM routine in dark mode"><div class="cap">Dark</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROTOTYPE & TESTING -->
+        <section class="case-section" id="prototype">
+            <span class="section-tag">Section 09 — Prototype &amp; Testing</span>
+            <h2 class="section-heading">Prototype &amp; testing</h2>
+
+            <div class="two-col">
+                <div class="gallery-frame" style="background:#7C8B6F">
+                    <span class="frame-label">PROTOTYPE</span>
+                    <img src="assets/prototype-phone.png" alt="The LAYER splash screen on an iPhone 16 Pro">
+                </div>
+                <div>
+                    <p class="lede">The prototype runs the full path end to end, including the skin-type fork into the personalised starter kit and the search-to-checkout flow.</p>
+                    <div class="process-row cols-2" style="margin-top:20px">
+                        <div class="process-block plain"><span class="frame-label">WHO</span><p style="margin-top:10px">Five people from the original interview group. All train regularly, all own skincare products they use inconsistently.</p></div>
+                        <div class="process-block plain"><span class="frame-label">HOW</span><p style="margin-top:10px">Unmoderated on their own phone, then a ten-minute call. Think-aloud, no prompting until a task stalled for a minute.</p></div>
+                    </div>
+                    <div class="process-block plain" style="margin-top:20px"><span class="frame-label">TASKS</span><p style="margin-top:10px">Complete onboarding, log a full evening routine, find why a product is flagged, and reorder it.</p></div>
+                    <a href="https://www.figma.com/proto/myLyasvIyHVKHAqVB04tOx/LAYER-%E2%80%94-Skincare-Tracker?node-id=1-18&t=CP8igMe5UzPs37Hu-1" target="_blank" rel="noopener" class="back-to-archive" style="margin-top:20px">VIEW PROTOTYPE →</a>
+                </div>
+            </div>
+
+            <div style="width:100%">
+                <span class="frame-label" style="width:fit-content">WHAT CAME BACK</span>
+                <p class="lede" style="margin-top:14px; margin-bottom:0">Five problems, ranked by how many testers hit them. Four fed straight into the changes in Section 07.</p>
+
+                <div class="rank-row">
+                    <div><span class="num">01</span><h4>Wrong session on open</h4><p>Everyone who opened the app in the evening tried to log against the morning list. The session tabs did not follow the time of day.</p></div>
+                    <div><span class="badge">4 of 5 testers</span><p class="result">Toggle moved inline, beside the heading — Iteration 01.</p></div>
+                </div>
+                <div class="rank-row">
+                    <div><span class="num">02</span><h4>Step order read as optional</h4><p>With checkboxes, testers treated the list as things to do in any order. Two applied SPF before moisturiser and did not notice.</p></div>
+                    <div><span class="badge">3 of 5 testers</span><p class="result">Numbered rings replaced checkboxes — Iteration 02.</p></div>
+                </div>
+                <div class="rank-row">
+                    <div><span class="num">03</span><h4>An extra tap to complete a step</h4><p>The first build opened a step detail to mark it done. Every tester tried to tap the row itself first.</p></div>
+                    <div><span class="badge">5 of 5 testers</span><p class="result">One-tap check-off directly from the list.</p></div>
+                </div>
+                <div class="rank-row">
+                    <div><span class="num">04</span><h4>Streak felt punitive after a miss</h4><p>A bare counter in the header made a missed day read as failure rather than a gap.</p></div>
+                    <div><span class="badge">2 of 5 testers</span><p class="result">Streak moved to its own screen with week and four-week context — Iteration 03.</p></div>
+                </div>
+                <div class="rank-row" style="border-bottom:2px solid var(--black)">
+                    <div><span class="num">05</span><h4>Low-stock badge missed on the shelf</h4><p>The warning sat below the fold on the product card. Testers found it only after being asked to reorder.</p></div>
+                    <div><span class="badge">3 of 5 testers</span><p class="result">Unresolved. Noted for the next round.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OUTCOMES -->
+        <section class="case-section" id="outcomes">
+            <span class="section-tag">Section 10 — Outcomes / Reflection</span>
+            <h2 class="section-heading">What this case study demonstrates</h2>
+
+            <div class="process-row">
+                <div class="process-block plain"><p>Reframing a saturated category by importing a mental model from an adjacent one I understand firsthand.</p></div>
+                <div class="process-block plain"><p>Building a system rather than screens: tokens, components and dark mode as a variable mode, so 18 screens re-theme from one source.</p></div>
+                <div class="process-block plain"><p>Research grounded in a real, personal pain point rather than a hypothetical brief, and a shop path added without letting it take over the daily job.</p></div>
+            </div>
+
+            <div class="process-row cols-6" style="grid-template-columns:repeat(4,1fr)">
+                <div class="process-block"><div class="num">5/5</div><p>completed a full evening log unaided in the second round, up from two in the first.</p></div>
+                <div class="process-block"><div class="num">3</div><p>taps to log a routine, down from seven in the first build.</p></div>
+                <div class="process-block"><div class="num">6/8</div><p>interviewees owned a product they had stopped using because they were unsure of its place in the order.</p></div>
+                <div class="process-block"><div class="num">9</div><p>tokens carry every colour across 18 screens and both modes.</p></div>
+            </div>
+
+            <div class="callout-box">
+                <div class="big">What I'd do next: test whether the streak mechanic holds up past week 2–3 without becoming another abandoned habit tracker, and explore a lightweight accountability layer, without turning it into another feed.</div>
+            </div>
+
+            <div class="process-block plain" style="max-width:100%">
+                <span class="frame-label">WHAT I'D CHANGE ABOUT HOW I WORKED</span>
+                <p style="margin-top:14px">I built the component library before I had tested anything, so the first round of findings meant reworking components rather than sketches. Next time the low-fidelity pass gets tested first and the system gets built around what survives. I would also test the shop branch, which never went in front of anyone.</p>
+            </div>
+        </section>
+
+        <div style="width:100%; max-width:1100px; border-top:3px solid var(--black); padding-top:28px">
+            <div class="footer-contact">
+                <div class="col">
+                    <span class="k">Contact</span>
+                    <span class="v">Mohamed Muudey</span>
+                    <a href="mailto:mosse-2002@hotmail.co.uk">mosse-2002@hotmail.co.uk</a>
+                </div>
+                <div class="col">
+                    <span class="k">Elsewhere</span>
+                    <a href="https://www.linkedin.com/in/mohamed-muudey-5355121b0/" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="../../index.html#archive">Portfolio</a>
+                </div>
+            </div>
+            <div class="site-footer-note">MOHAMED MUUDEY // LAYER CASE STUDY</div>
+            <a href="../../index.html#archive" class="back-to-archive">&larr; BACK TO ARCHIVE</a>
+        </div>
+    </main>
+
+</body>
+</html>

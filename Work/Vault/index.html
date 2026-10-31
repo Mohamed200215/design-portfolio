@@ -1,0 +1,738 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAULT // CASE STUDY — MM_ARCHIVE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'VaultDesigner';
+            src: url('../../Vault/Designer (3).otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'VaultAeroMatics';
+            src: url('../../Vault/Aero Matics Light Italic.ttf') format('truetype');
+            font-weight: 300;
+            font-style: italic;
+            font-display: swap;
+        }
+        :root {
+            --concrete-gray: #B4B4B4;
+            --warm-beige: #D9D2C5;
+            --black: #000000;
+            --off-black: #1A1A1A;
+            --white: #F2F2F2;
+            --scanline: rgba(0, 0, 0, 0.08);
+            --vault-blue: #2f2fe4;
+            --vault-lav: #c0c1ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: crosshair;
+        }
+
+        a, button, input[type="submit"], input[type="button"], [role="button"] { cursor: pointer; }
+
+        html, body {
+            overflow-x: hidden;
+            min-height: 100%;
+        }
+
+        body {
+            background-color: var(--concrete-gray);
+            color: var(--black);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(var(--scanline) 50%, transparent 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 101;
+            opacity: 0.3;
+        }
+
+        header {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            padding: 20px;
+            border-bottom: 2px solid var(--black);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            background-color: var(--warm-beige);
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: var(--black);
+            text-decoration: none;
+            padding: 2px 8px;
+            transition: all 0.1s;
+        }
+
+        .nav-links a:hover {
+            background: var(--black);
+            color: var(--warm-beige);
+        }
+
+        .archive-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 40px;
+            border-bottom: 4px solid var(--black);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .archive-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 64px;
+            text-transform: uppercase;
+            line-height: 0.8;
+            letter-spacing: -3px;
+        }
+
+        .archive-meta {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            text-align: right;
+            max-width: 400px;
+        }
+
+        .archive-meta .tag {
+            display: block;
+            opacity: 0.6;
+            margin-bottom: 6px;
+        }
+
+        .scroll-hint {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 14px;
+            opacity: 0.7;
+            transform: rotate(-2deg);
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .cta-band {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 20px 40px;
+            background: var(--off-black);
+            border-bottom: 4px solid var(--black);
+        }
+
+        .cta-band-text {
+            font-family: 'Space Mono', monospace;
+            color: var(--white);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
+        .cta-live-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            background: var(--vault-blue);
+            color: var(--white);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            border: 2px solid var(--black);
+            box-shadow: 6px 6px 0px var(--vault-lav);
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .cta-live-button:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px var(--vault-lav);
+        }
+
+        main.case-scroll {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 48px 20px 80px;
+            gap: 48px;
+        }
+
+        .case-section {
+            width: 100%;
+            max-width: 900px;
+            border: 3px solid var(--black);
+            box-shadow: 10px 10px 0px var(--black);
+            background: var(--white);
+            position: relative;
+            padding: 44px 40px;
+        }
+
+        .case-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--black);
+            color: var(--warm-beige);
+            padding: 4px 10px;
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            z-index: 2;
+        }
+
+        .case-heading {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin: 12px 0 20px;
+        }
+
+        .case-body p {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.7;
+            max-width: 68ch;
+            margin-bottom: 16px;
+        }
+
+        .case-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .case-body code {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85em;
+            background: var(--concrete-gray);
+            padding: 1px 5px;
+            border: 1px solid var(--black);
+        }
+
+        .swatch-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .swatch {
+            width: 120px;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+        }
+
+        .swatch-chip {
+            height: 64px;
+            border: 2px solid var(--black);
+            margin-bottom: 6px;
+        }
+
+        .type-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin: 24px 0;
+            padding: 20px;
+            background: var(--off-black);
+            border: 2px solid var(--black);
+        }
+
+        .type-sample {
+            color: var(--white);
+        }
+
+        .type-sample .glyphs {
+            font-size: 30px;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .type-sample .label {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--vault-lav);
+        }
+
+        .f-designer { font-family: 'VaultDesigner', 'Inter', sans-serif; letter-spacing: 1px; }
+        .f-mono { font-family: 'JetBrains Mono', 'Space Mono', monospace; }
+        .f-aero { font-family: 'VaultAeroMatics', 'Inter', sans-serif; font-weight: 300; font-style: italic; }
+
+        .state-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .state-chip {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 16px;
+            border: 1px solid #333;
+            background: var(--off-black);
+            color: var(--white);
+        }
+
+        .state-chip.is-active {
+            background: var(--vault-blue);
+            color: #fff;
+            border-color: var(--vault-blue);
+        }
+
+        .screen-frame {
+            margin: 32px 0 40px;
+            position: relative;
+            padding-top: 22px;
+        }
+
+        .screen-frame .frame-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--black);
+            color: var(--warm-beige);
+            padding: 4px 10px;
+            position: absolute;
+            top: 0;
+            left: -2px;
+            z-index: 2;
+        }
+
+        .laptop-mockup {
+            max-width: 640px;
+            margin: 20px auto 10px;
+            padding: 30px 10px 60px;
+            perspective: 2200px;
+        }
+
+        .laptop-3d {
+            position: relative;
+            transform: rotateX(15deg) rotateY(-22deg) rotateZ(4deg);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+        .laptop-mockup:hover .laptop-3d {
+            transform: rotateX(9deg) rotateY(-12deg) rotateZ(2deg);
+        }
+
+        .laptop-lid {
+            background: linear-gradient(135deg, #e6e6ea 0%, #b8b8c0 45%, #8c8c94 100%);
+            border-radius: 16px;
+            padding: 14px 14px 22px;
+            box-shadow:
+                0 60px 90px -30px rgba(0,0,0,0.65),
+                0 25px 40px -15px rgba(0,0,0,0.45);
+        }
+
+        .laptop-camera {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #333;
+            margin: 0 auto 10px;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
+        }
+
+        .laptop-screen {
+            position: relative;
+            border-radius: 6px;
+            background: #000;
+            overflow: hidden;
+            max-height: 480px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 0 2px #000;
+        }
+
+        .laptop-screen img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .laptop-screen::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(115deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.03) 18%, transparent 40%);
+        }
+
+        .laptop-deck {
+            height: 14px;
+            margin-top: 2px;
+            border-radius: 0 0 10px 10px;
+            background: linear-gradient(180deg, #cfcfd4, #a7a7ae);
+            position: relative;
+        }
+
+        .laptop-deck::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 6px;
+            border-radius: 0 0 6px 6px;
+            background: #9a9aa1;
+        }
+
+        .laptop-shadow {
+            width: 70%;
+            max-width: 420px;
+            height: 32px;
+            margin: -18px auto 0;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 55%, transparent 75%);
+            filter: blur(2px);
+        }
+
+        .file-list {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            line-height: 2;
+            margin: 20px 0;
+            padding: 16px 20px;
+            border: 1px solid var(--black);
+            background: var(--concrete-gray);
+        }
+
+        .flag-note {
+            margin: 20px 0 0;
+            padding: 14px 18px;
+            border-left: 4px solid var(--vault-blue);
+            background: var(--warm-beige);
+            font-family: 'Space Mono', monospace;
+            font-size: 12.5px;
+            line-height: 1.6;
+        }
+
+        .registration-mark {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--black);
+            border-radius: 50%;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .registration-mark::before { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--black); }
+        .registration-mark::after { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--black); }
+
+        .reg-tl { top: 10px; left: 10px; }
+        .reg-br { bottom: 10px; right: 10px; }
+
+        .back-to-archive {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 14px 28px;
+            border: 2px solid var(--black);
+            background: var(--warm-beige);
+            color: var(--black);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            box-shadow: 6px 6px 0px var(--black);
+            transition: all 0.15s;
+        }
+        .back-to-archive:hover {
+            background: var(--black);
+            color: var(--warm-beige);
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px var(--black);
+        }
+
+        .closing-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        @media (max-width: 640px) {
+            header {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                text-align: center;
+                padding: 12px 16px;
+            }
+            .nav-links {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 10px 16px;
+            }
+            .archive-heading {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px 16px 16px;
+            }
+            .archive-title { font-size: 15vw; }
+            .archive-meta { text-align: left; max-width: none; }
+            .cta-band { flex-direction: column; align-items: flex-start; padding: 16px; }
+            main.case-scroll { padding: 24px 12px 60px; gap: 28px; }
+            .case-section { padding: 28px 20px; }
+            .case-heading { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-mark reg-tl"></div>
+    <div class="registration-mark reg-br"></div>
+
+    <header>
+        <div class="status">SYSTEM: ACTIVE // 124.0.0.1</div>
+        <div class="logo">MM_UXUI_PRD_DSGN</div>
+        <nav class="nav-links">
+            <a href="../../index.html#home">HOME</a>
+            <a href="../../About/index.html">ABOUT/PERSONAL</a>
+            <a href="../../index.html#archive" style="background: var(--black); color: var(--warm-beige);">ARCHIVE</a>
+            <a href="../../index.html#contact">CONTACT</a>
+        </nav>
+    </header>
+
+    <div class="archive-heading">
+        <h1 class="archive-title">Vault</h1>
+        <div class="archive-meta">
+            <span class="tag">SELF-INITIATED // MARKETPLACE CONCEPT</span>
+            A neo-brutalist marketplace concept for high-end sneakers and streetwear — browse, product/auction detail, and bid flow, walked through screen by screen.
+            <span class="scroll-hint">scroll down ↓</span>
+        </div>
+    </div>
+
+    <div class="cta-band">
+        <div class="cta-band-text">The live prototype now runs on a real Supabase backend — auth, and cart/wishlist/orders synced to Postgres for signed-in users — though there's still no real payment processor.</div>
+        <a href="https://mohamed200215.github.io/VAULT/" target="_blank" rel="noopener" class="cta-live-button">Enter the vault (live prototype) ↗</a>
+    </div>
+
+    <main class="case-scroll">
+
+        <section class="case-section">
+            <span class="case-label">01 / OVERVIEW</span>
+            <h2 class="case-heading">What VAULT is</h2>
+            <div class="case-body">
+                <p>VAULT is a concept marketplace for buying, selling, and bidding on high-end sneakers and streetwear — StockX or GOAT's category, built as a design/front-end exercise, not a real business. It's for the resale crowd: people who already know what a "colorway" is and would rather scroll a dark, image-heavy storefront than a spreadsheet with a logo on it.</p>
+                <p>It's since grown a real backend: Supabase handles auth, wishlist, cart, and orders for signed-in users, with row-level security scoping every table to its owner, while guests still get the original client-side experience via <code>localStorage</code>. Same feature set either way — home, marketplace listings with filtering/sorting/search, product pages with size/colorway selection, a cart, and now real sign-in/sign-up instead of a fake local session.</p>
+            </div>
+        </section>
+
+        <section class="case-section">
+            <span class="case-label">02 / THE PROBLEM</span>
+            <h2 class="case-heading">Where resale platforms fall short</h2>
+            <div class="case-body">
+                <p><code>StockX</code> and <code>GOAT</code> are built for trust and liquidity, not identity — they read like financial terminals with sneaker photos on them. <code>Grailed</code> has more personality but leans messy and peer-to-peer, which cuts trust. Neither feels curated, like someone with taste picked what's on the shelf.</p>
+                <p>VAULT's bet: resale doesn't have to choose between "feels legit" and "feels like a brand" — a dark, editorial interface can still do the trust-signalling work (condition ratings, "Authenticated" language, Hot / New / Limited / Used badges) that makes people comfortable paying real money for a used shoe.</p>
+            </div>
+        </section>
+
+        <section class="case-section">
+            <span class="case-label">03 / DESIGN DIRECTION</span>
+            <h2 class="case-heading">Why neo-brutalism</h2>
+            <div class="case-body">
+                <p>Neo-brutalism fits streetwear because the culture already runs on the same grammar: stark contrast, oversized type, hard edges, "if you know you know" exclusivity. <code>DESIGN.md</code> calls for a dark-first "lights-out showroom" with sharp 0px-radius corners, so the interface recedes and lets product photography do the talking.</p>
+
+                <div class="type-row">
+                    <div class="type-sample">
+                        <div class="glyphs f-designer">Aa</div>
+                        <div class="label">Designer — headlines</div>
+                    </div>
+                    <div class="type-sample">
+                        <div class="glyphs f-mono">Aa</div>
+                        <div class="label">JetBrains Mono — price / data</div>
+                    </div>
+                    <div class="type-sample">
+                        <div class="glyphs f-aero">Aa</div>
+                        <div class="label">Aero Matics — body</div>
+                    </div>
+                </div>
+
+                <p>The two display/body faces above are the actual custom font files shipped with the build — <code>Designer (3).otf</code> for headlines and <code>Aero Matics Light Italic.ttf</code> for body copy — not stand-ins. Bebas Neue and Hanken Grotesk only exist in the CSS as fallbacks, in case those two files fail to load. JetBrains Mono handles anything transactional — price, the countdown — so numbers feel like data, not decoration.</p>
+
+                <div class="swatch-row">
+                    <div class="swatch"><div class="swatch-chip" style="background:#131313;"></div>surface<br>#131313</div>
+                    <div class="swatch"><div class="swatch-chip" style="background:#c0c1ff;"></div>primary<br>#c0c1ff</div>
+                    <div class="swatch"><div class="swatch-chip" style="background:#2f2fe4;"></div>primary-container<br>#2f2fe4</div>
+                    <div class="swatch"><div class="swatch-chip" style="background:#e4e2e1;"></div>on-surface<br>#e4e2e1</div>
+                </div>
+
+                <p>The color system borrows Material 3's token structure (surface / on-surface / primary / on-primary-container) but points it at a brutalist palette: near-black surfaces and one electric blue reserved almost entirely for CTAs, so the eye has exactly one place to land.</p>
+            </div>
+        </section>
+
+        <section class="case-section">
+            <span class="case-label">04 / KEY SCREENS</span>
+            <h2 class="case-heading">Browse, product, bid</h2>
+            <div class="case-body">
+                <p><strong>Home</strong> opens on a full-bleed hero for the featured drop (an Air Jordan 7 'Miro' 2026) with a countdown and a "Place bid" button that opens a real modal — enter an amount, it's validated against the current bid, and the figure updates live. Below that, a scrollable "Trending now" rail sits next to a filterable "New listings" grid — curated browsing and filtered browsing on the same page.</p>
+            </div>
+            <div class="screen-frame">
+                <span class="frame-label">HOME — FEATURED DROP + AUCTION</span>
+                <div class="laptop-mockup">
+                    <div class="laptop-3d">
+                        <div class="laptop-lid">
+                            <div class="laptop-camera"></div>
+                            <div class="laptop-screen">
+                                <img src="screen-home.png" alt="VAULT home page hero showing the featured Air Jordan 7 'Miro' drop with an auction countdown, current bid, and Place bid button">
+                            </div>
+                        </div>
+                        <div class="laptop-deck"></div>
+                    </div>
+                    <div class="laptop-shadow"></div>
+                </div>
+            </div>
+            <div class="case-body">
+                <p><strong>Listings</strong> is the full marketplace: category pills, three sort modes, live search, all filtering one array with no reload.</p>
+            </div>
+            <div class="screen-frame">
+                <span class="frame-label">LISTINGS — MARKETPLACE GRID</span>
+                <div class="laptop-mockup">
+                    <div class="laptop-3d">
+                        <div class="laptop-lid">
+                            <div class="laptop-camera"></div>
+                            <div class="laptop-screen">
+                                <img src="screen-listings.png" alt="VAULT listings page showing the full product grid with category filters, sort controls, and a search field">
+                            </div>
+                        </div>
+                        <div class="laptop-deck"></div>
+                    </div>
+                    <div class="laptop-shadow"></div>
+                </div>
+            </div>
+            <div class="case-body">
+                <p><strong>Product detail</strong> is deliberately strict — no add-to-cart or buy-now without a size and colorway; skip one and it gets a red outline plus a toast naming what's missing, friction that's actually doing a trust job. A related-products rail keeps you inside the category instead of dead-ending on one shoe.</p>
+            </div>
+            <div class="screen-frame">
+                <span class="frame-label">PRODUCT — SIZE / COLORWAY / RELATED</span>
+                <div class="laptop-mockup">
+                    <div class="laptop-3d">
+                        <div class="laptop-lid">
+                            <div class="laptop-camera"></div>
+                            <div class="laptop-screen">
+                                <img src="screen-product.png" alt="VAULT product detail page for the Nike Zoom Kobe 4 Protro, showing size and colorway selectors, add to cart and buy now buttons, and a related products rail">
+                            </div>
+                        </div>
+                        <div class="laptop-deck"></div>
+                    </div>
+                    <div class="laptop-shadow"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="case-section">
+            <span class="case-label">05 / DESIGN SYSTEM</span>
+            <h2 class="case-heading">Components, spacing, states</h2>
+            <div class="case-body">
+                <p>The system is enforced in code, not just described. <code>.neo-border</code> (a flat 1px #333 stroke) marks the hero's bid card and home page product cards, and cards are properly componentized — <code>.product-card</code> / <code>.product-card-content</code> / <code>.product-card-footer</code> pin the price/CTA row to the bottom regardless of description length.</p>
+                <p>States are real: <code>.filter-active</code>, <code>.filter-pill.active</code>, and <code>.option-selected</code> share the same electric-blue-fill treatment, so "selected" looks identical whether it's a category pill, sort button, or size chip:</p>
+
+                <div class="state-row">
+                    <span class="state-chip">All</span>
+                    <span class="state-chip is-active">Sneakers</span>
+                    <span class="state-chip">Apparel</span>
+                    <span class="state-chip is-active">10</span>
+                    <span class="state-chip">11</span>
+                </div>
+
+                <div class="flag-note">FLAGGED: DESIGN.md specifies hard 0px-radius corners everywhere, and the home page respects that — but <code>listings.html</code> and <code>product.html</code> drifted to <code>rounded-3xl</code> cards and <code>rounded-full</code> buttons. A real gap between the documented system and the shipped pages, not a deliberate variant.</div>
+            </div>
+        </section>
+
+        <section class="case-section">
+            <span class="case-label">06 / BUILD NOTES</span>
+            <h2 class="case-heading">Front-end approach</h2>
+            <div class="case-body">
+                <p>Rebuilt on Vite + TypeScript + React: static HTML per page for markup and SEO, React islands for the interactive pieces (cart, wishlist, product options), and a typed data layer backed by Supabase — Postgres tables with row-level security for auth, wishlist, cart, and orders, falling back to <code>localStorage</code> for guests and merging a guest's items into their account on sign-in. Tailwind's still CDN-loaded, with a token config that mirrors DESIGN.md. A Vitest suite (unit tests plus React Testing Library component tests) and ESLint/Prettier run in CI on every pull request.</p>
+
+                <div class="file-list">
+                    index.html &nbsp;— home / featured auction<br>
+                    listings.html — marketplace grid<br>
+                    product.html &nbsp;— product detail<br>
+                    cart.html &nbsp;&nbsp;&nbsp;&nbsp;— cart<br>
+                    auth.html &nbsp;&nbsp;&nbsp;&nbsp;— real sign in / sign up<br>
+                    about.html &nbsp;&nbsp;&nbsp;— about<br>
+                    src/supabaseClient.ts, auth.ts — Supabase client + session<br>
+                    src/wishlist.ts, client.ts &nbsp;— Postgres-backed wishlist/cart (guest fallback: localStorage)
+                </div>
+
+                <p>Two details worth calling out: card clicks use one delegated document-level listener rather than per-card listeners, so it survives back-button/bfcache and doesn't care whether a link is <code>product.html?id=</code> or something a host rewrote. And the homepage runs a scripted "vault door" opening animation over the hero — theatre that earns the name, now gated to play once per browser session instead of replaying every time you click back to the logo.</p>
+
+                <div class="flag-note">BUG FOUND WRITING THIS UP: the featured-drop bid is meant to persist via <code>localStorage</code>, but the home script resets it to $2,500 on every load, so a placed bid doesn't survive a refresh.</div>
+            </div>
+        </section>
+
+        <section class="case-section">
+            <span class="case-label">07 / REFLECTION</span>
+            <h2 class="case-heading">What I'd test, what I'd fix</h2>
+            <div class="case-body">
+                <p>This is a self-initiated concept project — no real users, no interviews, no usage data, and I'd rather say that plainly than dress it up.</p>
+                <p>If I tested it with real people, I'd want to know whether the size/colorway-required flow reads as helpful friction or just an annoying wall, and whether "Place bid" is discoverable at all — right now it's a plain outlined button with no visual weight next to the hero image, and I have no evidence anyone would notice it's clickable. I'd also want a first-click test on "Latest drops" vs. "Marketplace" in the nav, since I assumed what those labels mean to a resale audience without checking it.</p>
+                <p>On the build side, next fixes are the rounded-corner drift between home and listings/product, and the bid-persistence bug — both concrete, verifiable issues, not guesses.</p>
+            </div>
+        </section>
+
+        <div class="closing-row">
+            <a href="https://mohamed200215.github.io/VAULT/" target="_blank" rel="noopener" class="cta-live-button">Enter the vault (live prototype) ↗</a>
+            <a href="../../index.html#archive" class="back-to-archive">&larr; BACK TO ARCHIVE</a>
+        </div>
+    </main>
+</body></html>

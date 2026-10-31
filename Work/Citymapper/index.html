@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CITYMAPPER REDESIGN // UX/UI CASE STUDY — MM_ARCHIVE</title>
+<meta name="description" content="A full UX/UI redesign of Citymapper — untangling a cluttered home screen, rebuilding the navigation hierarchy, and giving the app a typography system worthy of the millions of journeys it plans every day.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Citymapper Redesign — UX/UI Case Study">
+<meta property="og:description" content="A full UX/UI redesign of Citymapper: home screen, navigation and typography, rebuilt. Full case study.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --concrete-gray: #B4B4B4;
+        --warm-beige: #D9D2C5;
+        --black: #000000;
+        --off-black: #1A1A1A;
+        --white: #F2F2F2;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+    a, button, input, [role="button"] { cursor: pointer; }
+    html, body { overflow-x: hidden; min-height: 100%; }
+    img { max-width: 100%; display: block; }
+    ::selection { background: var(--black); color: var(--warm-beige); }
+
+    body {
+        background-color: var(--concrete-gray);
+        color: var(--black);
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh; width: 100vw;
+        display: flex; flex-direction: column; position: relative;
+    }
+
+    header.site-header {
+        display: grid; grid-template-columns: 1fr auto 1fr;
+        padding: 20px; border-bottom: 2px solid var(--black);
+        font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1px;
+        z-index: 10; background-color: var(--warm-beige); flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 24px; justify-content: flex-end; }
+    .nav-links a { color: var(--black); text-decoration: none; padding: 2px 8px; transition: all 0.1s; }
+    .nav-links a:hover { background: var(--black); color: var(--warm-beige); }
+
+    .archive-heading { padding: 40px; border-bottom: 4px solid var(--black); }
+    .archive-title { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 64px; text-transform: uppercase; line-height: 0.88; letter-spacing: -2.5px; max-width: 16ch; }
+    .archive-meta { font-family: 'Space Mono', monospace; font-size: 13px; max-width: 680px; margin-top: 16px; }
+    .archive-meta .tag { display: block; opacity: 0.6; margin-bottom: 10px; font-weight: 700; }
+    .archive-meta .lede-text { font-family: 'Inter', sans-serif; font-size: 18px; line-height: 1.5; margin-top: 4px; max-width: 700px; }
+    .scroll-hint { font-family: 'Permanent Marker', cursive; font-size: 14px; opacity: 0.7; transform: rotate(-2deg); display: inline-block; margin-top: 16px; }
+
+    .cta-button { display: inline-flex; align-items: center; gap: 10px; margin-top: 28px; padding: 14px 26px; border: 3px solid var(--black); background: var(--black); color: var(--warm-beige); font-family: 'Space Mono', monospace; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; box-shadow: 6px 6px 0px var(--off-black); transition: all 0.15s; }
+    .cta-button:hover { background: var(--warm-beige); color: var(--black); transform: translate(-3px,-3px); box-shadow: 9px 9px 0px var(--black); }
+    .cta-button.ghost { background: var(--warm-beige); color: var(--black); }
+    .cta-button.ghost:hover { background: var(--black); color: var(--warm-beige); }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); border-top: 3px solid var(--black); border-bottom: 3px solid var(--black); margin-top: 36px; }
+    .stat-grid > div { padding: 18px 22px; border-right: 2px solid var(--black); }
+    .stat-grid > div:last-child { border-right: none; }
+    .stat-grid .k { font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; opacity:0.6; margin-bottom:6px; }
+    .stat-grid .v { font-size: 16px; font-weight: 700; }
+
+    .toc { display: flex; flex-wrap: wrap; row-gap: 8px; font-size: 12px; font-family:'Space Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 32px; padding-top: 20px; border-top: 2px solid var(--black); }
+    .toc a { color: var(--black); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .toc span.sep { opacity: 0.4; margin: 0 12px; }
+
+    .gallery-scroll { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 40px 20px 80px; gap: 40px; }
+    .case-section { width: 100%; max-width: 1100px; display: flex; flex-direction: column; gap: 28px; }
+    .section-tag { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; background: var(--black); color: var(--warm-beige); padding: 6px 12px; display: inline-block; width: fit-content; text-transform: uppercase; letter-spacing: 1px; }
+    .section-heading { font-family:'Inter',sans-serif; font-weight:900; font-size: clamp(28px,4vw,42px); line-height:1.05; letter-spacing:-0.02em; max-width: 800px; }
+    .lede { font-size: 16px; line-height: 1.65; max-width: 720px; }
+
+    .process-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+    .process-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .process-row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 900px) { .process-row, .process-row.cols-2 { grid-template-columns: 1fr; } .process-row.cols-4 { grid-template-columns: repeat(2,1fr); } }
+
+    .process-block { border: 3px solid var(--black); background: var(--warm-beige); box-shadow: 6px 6px 0px var(--black); padding: 22px; }
+    .process-block.plain { background: var(--white); box-shadow: 4px 4px 0px var(--black); }
+    .process-block .frame-label { position: static; display: inline-block; margin-bottom: 12px; }
+    .process-block p { font-size: 14px; line-height: 1.6; margin: 0; }
+    .process-block ul { margin: 0; padding-left: 18px; font-size: 13.5px; line-height: 1.6; }
+    .process-block .block-title { font-size: 18px; font-weight: 700; line-height: 1.3; margin-bottom: 10px; }
+    .process-block .num { font-size: 30px; font-weight: 900; font-family:'Inter',sans-serif; margin-bottom: 10px; }
+
+    .frame-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; background: var(--black); color: var(--warm-beige); padding: 4px 10px; }
+
+    .gallery-frame { width: 100%; border: 3px solid var(--black); border-radius: 14px; box-shadow: 10px 10px 0px var(--black); background: var(--off-black); position: relative; overflow: hidden; }
+    .gallery-frame > .frame-label { position: absolute; top: 10px; left: 10px; z-index: 2; border-radius: 4px; }
+    .gallery-frame img { display: block; width: 100%; height: auto; }
+    .gallery-frame .frame-caption { padding: 12px 16px; border-top: 3px solid var(--black); background: var(--warm-beige); font-family: 'Space Mono', monospace; font-size: 12px; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+    .table-box { border: 3px solid var(--black); box-shadow: 8px 8px 0px var(--black); background: var(--white); overflow-x: auto; }
+    .table-box table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    .table-box th { text-align: left; font-family:'Space Mono',monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 16px; border-bottom: 3px solid var(--black); background: var(--warm-beige); }
+    .table-box td { padding: 14px 16px; border-bottom: 1px solid rgba(0,0,0,0.15); vertical-align: top; }
+    .table-box tr:last-child td { border-bottom: none; }
+    .table-box td.row-head { font-weight: 700; white-space: nowrap; }
+
+    .persona-card { border: 3px solid var(--black); background: var(--white); box-shadow: 8px 8px 0px var(--black); padding: 30px; }
+    .persona-card .k { font-family:'Space Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.6; }
+    .persona-card h3 { font-size: 22px; font-weight: 900; margin: 10px 0 2px; }
+    .persona-card .sub { font-family:'Space Mono',monospace; font-size: 12px; opacity: 0.6; }
+    .persona-card .sub-k { font-family:'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.55; margin-bottom: 8px; display: block; }
+    .persona-card ul { margin: 0 0 14px; padding-left: 18px; font-size: 14px; line-height: 1.55; }
+
+    .flow-diagram { border: 3px solid var(--black); background: var(--white); box-shadow: 8px 8px 0px var(--black); padding: 28px; }
+    .flow-root { text-align: center; margin-bottom: 8px; }
+    .flow-root span { font-family:'Space Mono',monospace; font-weight: 700; font-size: 13px; background: var(--black); color: var(--warm-beige); padding: 10px 24px; display: inline-block; }
+    .flow-tree { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-top: 20px; }
+    @media (max-width: 800px) { .flow-tree { grid-template-columns: repeat(2,1fr); } }
+    .flow-branch { display: flex; flex-direction: column; gap: 8px; }
+    .flow-branch .branch-title { border: 2px solid var(--black); text-align: center; padding: 10px 8px; font-weight: 700; font-size: 13px; background: var(--warm-beige); }
+    .flow-branch .branch-title.accent { background: var(--black); color: var(--warm-beige); }
+    .flow-branch .leaf { border: 1px solid rgba(0,0,0,0.3); text-align: center; padding: 8px; font-size: 11.5px; }
+    .flow-note { border-left: 3px solid var(--black); padding: 4px 0 4px 18px; font-size: 13.5px; }
+
+    .quote-block { border: 3px solid var(--black); background: var(--white); box-shadow: 6px 6px 0px var(--black); padding: 26px 28px; }
+    .quote-block p { font-family:'Inter',sans-serif; font-size: 17px; line-height: 1.45; font-weight: 600; font-style: italic; margin: 0; }
+
+    .toggle-pill { display: inline-flex; border: 2px solid var(--black); border-radius: 999px; padding: 4px; }
+    .toggle-pill button { border: none; background: transparent; font-family:'Space Mono',monospace; font-weight: 700; font-size: 12px; text-transform: uppercase; padding: 8px 20px; border-radius: 999px; }
+    .toggle-pill button.active { background: var(--black); color: var(--warm-beige); }
+
+    .compare-card { border: 3px solid var(--black); background: var(--white); box-shadow: 8px 8px 0px var(--black); padding: 26px; display: flex; gap: 24px; align-items: center; }
+    @media (max-width: 640px) { .compare-card { flex-direction: column; align-items: flex-start; } }
+    .compare-card .shot { width: 130px; flex-shrink: 0; }
+
+    .color-chip { border: 2px solid var(--black); }
+    .color-chip .swatch { height: 74px; border-bottom: 2px solid var(--black); }
+    .color-chip .info { padding: 10px 12px; background: var(--white); }
+    .color-chip .hex { font-family:'Space Mono',monospace; font-size: 11px; font-weight: 700; }
+    .color-chip .use { font-size: 11px; opacity: 0.6; display: block; margin-top: 2px; }
+
+    .type-row { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 2px solid rgba(0,0,0,0.15); padding-bottom: 14px; gap: 16px; flex-wrap: wrap; }
+    .type-row:last-child { border-bottom: none; }
+    .type-row .spec { font-family:'Space Mono',monospace; font-size: 11px; opacity: 0.55; white-space: nowrap; }
+
+    .back-to-archive { display: inline-block; margin-top: 8px; padding: 14px 28px; border: 2px solid var(--black); background: var(--warm-beige); color: var(--black); font-family: 'Space Mono', monospace; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; box-shadow: 6px 6px 0px var(--black); transition: all 0.15s; }
+    .back-to-archive:hover { background: var(--black); color: var(--warm-beige); transform: translate(-3px, -3px); box-shadow: 9px 9px 0px var(--black); }
+    .site-footer-note { font-family:'Space Mono', monospace; font-size: 11px; opacity: 0.6; margin-bottom: 14px; }
+    .footer-contact { display: flex; flex-wrap: wrap; gap: 40px; margin-bottom: 24px; }
+    .footer-contact .col { display: flex; flex-direction: column; gap: 6px; }
+    .footer-contact .k { font-family:'Space Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.6; }
+    .footer-contact a, .footer-contact span.v { font-size: 14px; color: var(--black); }
+
+    @media (max-width: 640px) {
+        header.site-header { grid-template-columns: 1fr; gap: 8px; text-align: center; padding: 12px 16px; }
+        .nav-links { justify-content: center; flex-wrap: wrap; gap: 10px 16px; }
+        .archive-heading { padding: 24px 18px; }
+        .archive-title { font-size: 14vw; }
+        .stat-grid { grid-template-columns: repeat(2,1fr); }
+        .stat-grid > div:nth-child(2n) { border-right: none; }
+        .stat-grid > div:nth-child(-n+2) { border-bottom: 2px solid var(--black); }
+        .gallery-scroll { padding: 24px 12px 60px; gap: 28px; }
+    }
+</style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="status">SYSTEM: ACTIVE // 124.0.0.1</div>
+        <div class="logo">MM_UXUI_PRD_DSGN</div>
+        <nav class="nav-links">
+            <a href="../../index.html#home">HOME</a>
+            <a href="../../About/index.html">ABOUT/PERSONAL</a>
+            <a href="../../index.html#archive" style="background: var(--black); color: var(--warm-beige);">ARCHIVE</a>
+            <a href="../../index.html#contact">CONTACT</a>
+        </nav>
+    </header>
+
+    <div class="archive-heading" id="top">
+        <h1 class="archive-title">Citymapper·Redesign</h1>
+        <div class="archive-meta">
+            <span class="tag">CASE STUDY, 2025 // CONCEPT REDESIGN</span>
+            <p class="lede-text">Rethinking how a city moves in your hand. A full UX/UI overhaul of Citymapper — untangling a cluttered home screen, rebuilding the navigation hierarchy, and giving the app a typography system worthy of the millions of journeys it plans every day.</p>
+            <span class="scroll-hint">scroll down ↓</span>
+        </div>
+
+        <a href="https://www.figma.com/proto/tCSaCZYdvwq49JL9PMhKER/Citymapper-Redesign?node-id=7-53&starting-point-node-id=7-53&scaling=scale-down&content-scaling=fixed" target="_blank" rel="noopener" class="cta-button">TRY THE INTERACTIVE PROTOTYPE →</a>
+
+        <div class="stat-grid">
+            <div><div class="k">Role</div><div class="v">Sole designer — Research, UI, Prototype</div></div>
+            <div><div class="k">Timeline</div><div class="v">2 weeks</div></div>
+            <div><div class="k">Platform</div><div class="v">iOS &amp; Android, mobile-first</div></div>
+            <div><div class="k">Tools</div><div class="v">Figma · Maze</div></div>
+        </div>
+
+        <nav class="toc" aria-label="Case study sections">
+            <span style="opacity:0.6; margin-right:18px">On this page</span>
+            <a href="#overview">01 Overview</a><span class="sep">/</span>
+            <a href="#problem">02 Problem</a><span class="sep">/</span>
+            <a href="#research">03 Research</a><span class="sep">/</span>
+            <a href="#personas">04 Personas</a><span class="sep">/</span>
+            <a href="#ia">05 Architecture</a><span class="sep">/</span>
+            <a href="#wireframes">06 Wireframes</a><span class="sep">/</span>
+            <a href="#mockups">07 Mockups</a><span class="sep">/</span>
+            <a href="#beforeafter">08 Before/After</a><span class="sep">/</span>
+            <a href="#designsystem">09 Design System</a><span class="sep">/</span>
+            <a href="#reflection">10 Reflection</a>
+        </nav>
+    </div>
+
+    <main class="gallery-scroll">
+
+        <div class="process-row" style="max-width:1100px; width:100%">
+            <div class="gallery-frame"><img src="images/01-citymapper-redesign-home-screen.png" alt="Citymapper redesign home screen"></div>
+            <div class="gallery-frame"><img src="images/02-live-journey-tracking-screen.png" alt="Live journey tracking screen"></div>
+            <div class="gallery-frame"><img src="images/03-route-destination-screen.png" alt="Route destination screen"></div>
+        </div>
+
+        <!-- 01 OVERVIEW -->
+        <section class="case-section" id="overview">
+            <span class="section-tag">Section 01 — Overview</span>
+            <h2 class="section-heading">The app that built my city instincts — and where it started to slow me down.</h2>
+            <div class="two-col">
+                <p class="lede">Citymapper is the transit app I open more than any other — it stitches together tube, bus, bike, walk and rail into a single decision. After years of daily use, I kept noticing the same friction: a home screen crowded with features I never touch, navigation patterns that change between screens, and a typographic hierarchy that makes the important moment — "which train, which platform, how long" — work harder than it should.</p>
+                <p class="lede">So I scoped a self-initiated overhaul: keep the intelligence Citymapper is loved for, but rebuild the surface around it. Clearer first screen, one consistent navigation model, and a type system tuned for glanceability on the move.</p>
+            </div>
+        </section>
+
+        <!-- 02 PROBLEM -->
+        <section class="case-section" id="problem">
+            <span class="section-tag">Section 02 — Problem Statement</span>
+            <h2 class="section-heading">Four issues quietly tax every journey.</h2>
+            <div class="process-row cols-2">
+                <div class="process-block">
+                    <div class="num">P-01</div>
+                    <div class="block-title">Cluttered home screen</div>
+                    <p>The first screen tries to do everything at once — saved places, nearby departures, bikes, weather, disruptions, promos. The single most common task, "plan a route," competes with a dozen modules for attention.</p>
+                </div>
+                <div class="process-block">
+                    <div class="num">P-02</div>
+                    <div class="block-title">Inconsistent UI patterns</div>
+                    <p>Cards, lists and sheets each behave slightly differently. Some actions live in a top bar, others in a floating button, others in a bottom sheet — so muscle memory never fully forms across the app.</p>
+                </div>
+                <div class="process-block">
+                    <div class="num">P-03</div>
+                    <div class="block-title">Poor navigation hierarchy</div>
+                    <p>Key destinations are buried two or three taps deep, while secondary features sit at the top level. There's no stable mental model for "where am I" or "how do I get back" mid-journey.</p>
+                </div>
+                <div class="process-block">
+                    <div class="num">P-04</div>
+                    <div class="block-title">Weak typography system</div>
+                    <p>Too many sizes doing too little. Departure times, line names and walking distances share similar weights, so the eye can't lock onto the one number that matters when you're glancing at a moving train.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 RESEARCH -->
+        <section class="case-section" id="research">
+            <span class="section-tag">Section 03 — Research</span>
+            <h2 class="section-heading">I talked to commuters, then watched them tap.</h2>
+            <p class="lede">6 interviews with daily transit users across London, plus 3 moderated usability sessions on the current app and an unmoderated 20-person task test in Maze. I paired that with a teardown of three competitors to map where Citymapper leads and where it lags.</p>
+
+            <div class="process-row cols-4">
+                <div class="process-block"><div class="num">68%</div><p>of users said the home screen feels "busier than it needs to be"</p></div>
+                <div class="process-block"><div class="num">3.2s</div><p>avg. time to find the next departure on a busy route screen</p></div>
+                <div class="process-block"><div class="num">2.7</div><p>avg. taps to reach a saved place — expected to be one</p></div>
+                <div class="process-block"><div class="num">5/6</div><p>interviewees use a second app to double-check live times</p></div>
+            </div>
+
+            <div>
+                <span class="frame-label" style="width:fit-content">COMPETITOR TEARDOWN</span>
+                <div class="table-box" style="margin-top:16px">
+                    <table>
+                        <tr><th>Dimension</th><th>Google Maps</th><th>TfL Go</th><th>Moovit</th></tr>
+                        <tr><td class="row-head">Multi-modal routing</td><td>Strong</td><td>Rail-only</td><td>Strong</td></tr>
+                        <tr><td class="row-head">Live disruption clarity</td><td>Buried</td><td>Excellent</td><td>Noisy</td></tr>
+                        <tr><td class="row-head">Home-screen focus</td><td>Search-led</td><td>Minimal</td><td>Cluttered</td></tr>
+                        <tr><td class="row-head">Typographic hierarchy</td><td>Clear</td><td>Clear</td><td>Flat</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <span class="frame-label" style="width:fit-content">THREE INSIGHTS THAT SHAPED THE REDESIGN</span>
+                <div class="process-row" style="margin-top:16px">
+                    <div class="process-block plain">
+                        <div class="frame-label">INSIGHT 01</div>
+                        <p style="margin-top:12px; font-weight:600">People open the app with a destination already in mind. Everything before the route is friction.</p>
+                        <p style="margin-top:10px; opacity:0.7">→ Home Redesign leads with a single search field. Nothing else competes above the fold.</p>
+                    </div>
+                    <div class="process-block plain">
+                        <div class="frame-label">INSIGHT 02</div>
+                        <p style="margin-top:12px; font-weight:600">Trust is built in the live journey. If departure times feel uncertain, users reach for a second app.</p>
+                        <p style="margin-top:10px; opacity:0.7">→ Journey Tracker pairs every live time with a source and freshness stamp, so certainty is visible, not assumed.</p>
+                    </div>
+                    <div class="process-block plain">
+                        <div class="frame-label">INSIGHT 03</div>
+                        <p style="margin-top:12px; font-weight:600">Glanceability beats density. One bold number outperforms five competing labels at a bus stop.</p>
+                        <p style="margin-top:10px; opacity:0.7">→ The type scale gives the departure number its own weight class — nothing on the route card competes with it.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 PERSONAS -->
+        <section class="case-section" id="personas">
+            <span class="section-tag">Section 04 — Personas</span>
+            <h2 class="section-heading">Two riders I designed every decision around.</h2>
+            <div class="two-col">
+                <div class="persona-card">
+                    <span class="k">Persona A</span>
+                    <h3>Maya Okonkwo</h3>
+                    <span class="sub">28 · Commuter · Hackney → Canary Wharf</span>
+                    <div class="quote-block" style="margin:16px 0; box-shadow:none; padding:14px 16px">
+                        <p style="font-size:15px">"I have eleven minutes to make the change at Bank. I don't want to think — just tell me the platform."</p>
+                    </div>
+                    <span class="sub-k">Goals</span>
+                    <ul><li>Leave home and trust the first route shown</li><li>Catch interchanges without missing a beat</li><li>Get re-routed instantly when a line is down</li></ul>
+                    <span class="sub-k">Frustrations</span>
+                    <ul><li>Too much to scan before she can act</li><li>Live times she's not sure she can trust</li><li>Saved places hidden behind extra taps</li></ul>
+                </div>
+                <div class="persona-card">
+                    <span class="k">Persona B</span>
+                    <h3>Tomás Rivera</h3>
+                    <span class="sub">41 · Occasional visitor · New to London</span>
+                    <div class="quote-block" style="margin:16px 0; box-shadow:none; padding:14px 16px">
+                        <p style="font-size:15px">"I don't know the lines or the zones. I just need to know I'm walking the right way out of the station."</p>
+                    </div>
+                    <span class="sub-k">Goals</span>
+                    <ul><li>Understand a route without local knowledge</li><li>Clear step-by-step guidance on the ground</li><li>Know the cost before he commits</li></ul>
+                    <span class="sub-k">Frustrations</span>
+                    <ul><li>Jargon and abbreviations he doesn't know</li><li>Unsure which exit or platform to take</li><li>Anxious about getting on the wrong train</li></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 INFORMATION ARCHITECTURE -->
+        <section class="case-section" id="ia">
+            <span class="section-tag">Section 05 — Information Architecture</span>
+            <h2 class="section-heading">From a deep, branching tree to four honest tabs.</h2>
+            <p class="lede">An open card sort with 10 participants revealed that users group the app into four jobs, not the eight sections it ships with. I collapsed the navigation into a stable bottom bar — <strong>Go, Saved, Nearby, Account</strong> — and pushed everything else into context, where it's needed.</p>
+
+            <div class="flow-diagram">
+                <div class="flow-root"><span>CITYMAPPER</span></div>
+                <div class="flow-tree">
+                    <div class="flow-branch">
+                        <div class="branch-title accent">Go</div>
+                        <div class="leaf">Route search</div>
+                        <div class="leaf">Live journey</div>
+                        <div class="leaf">Disruptions</div>
+                    </div>
+                    <div class="flow-branch">
+                        <div class="branch-title">Saved</div>
+                        <div class="leaf">Home &amp; Work</div>
+                        <div class="leaf">Places</div>
+                        <div class="leaf">Lines</div>
+                    </div>
+                    <div class="flow-branch">
+                        <div class="branch-title">Nearby</div>
+                        <div class="leaf">Departures</div>
+                        <div class="leaf">Bikes &amp; scooters</div>
+                        <div class="leaf">Stations map</div>
+                    </div>
+                    <div class="flow-branch">
+                        <div class="branch-title">Account</div>
+                        <div class="leaf">Tickets &amp; passes</div>
+                        <div class="leaf">Preferences</div>
+                        <div class="leaf">Settings</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-note"><strong>Also tested:</strong> a 5-tab structure with a dedicated Tickets tab. Card-sort data showed ticketing consistently grouped under Account rather than standing alone, so I cut it — one fewer tab, no lost function.</div>
+
+            <div class="process-row">
+                <div class="process-block"><div class="num">−50%</div><p>top-level destinations</p></div>
+                <div class="process-block"><div class="num">2.7 → 1</div><p>taps to a saved place (design target — not yet usability-tested)</p></div>
+                <div class="process-block"><div class="num">1</div><p>consistent navigation model</p></div>
+            </div>
+        </section>
+
+        <!-- 06 WIREFRAMES -->
+        <section class="case-section" id="wireframes">
+            <span class="section-tag">Section 06 — Wireframes, Lo-fi</span>
+            <h2 class="section-heading">Structure first, in greyscale.</h2>
+            <div class="process-row cols-4">
+                <div class="gallery-frame"><img src="images/04-home-wireframe.png" alt="Home wireframe"><div class="frame-caption">01 · Home</div></div>
+                <div class="gallery-frame"><img src="images/05-route-search-wireframe.png" alt="Route search wireframe"><div class="frame-caption">02 · Route Search</div></div>
+                <div class="gallery-frame"><img src="images/06-live-journey-wireframe.png" alt="Live journey wireframe"><div class="frame-caption">03 · Live Journey</div></div>
+                <div class="gallery-frame"><img src="images/07-settings-wireframe.png" alt="Settings wireframe"><div class="frame-caption">04 · Settings</div></div>
+            </div>
+        </section>
+
+        <!-- 07 MOCKUPS -->
+        <section class="case-section" id="mockups">
+            <span class="section-tag">Section 07 — Hi-fi Mockups</span>
+            <h2 class="section-heading">The redesign, fully dressed.</h2>
+            <div class="process-row cols-4">
+                <div>
+                    <div class="gallery-frame"><img src="images/01-citymapper-redesign-home-screen.png" alt="Home redesign mockup"></div>
+                    <p style="margin-top:12px; font-weight:700">Home Redesign</p>
+                    <p style="font-size:13px; opacity:0.75; margin-top:4px">Search and saved places lead. One map, one input, zero clutter.</p>
+                </div>
+                <div>
+                    <div class="gallery-frame"><img src="images/03-route-destination-screen.png" alt="Search flow mockup"></div>
+                    <p style="margin-top:12px; font-weight:700">Search Flow</p>
+                    <p style="font-size:13px; opacity:0.75; margin-top:4px">Ranked options with the trade-off — time, cost, ease — legible at a glance.</p>
+                </div>
+                <div>
+                    <div class="gallery-frame"><img src="images/02-live-journey-tracking-screen.png" alt="Journey tracker mockup"></div>
+                    <p style="margin-top:12px; font-weight:700">Journey Tracker</p>
+                    <p style="font-size:13px; opacity:0.75; margin-top:4px">One instruction at a time. The next action is always the biggest thing on screen.</p>
+                </div>
+                <div>
+                    <div class="gallery-frame"><img src="images/08-bottom-nav-system-spec.png" alt="Bottom nav system spec"></div>
+                    <p style="margin-top:12px; font-weight:700">Bottom Nav System</p>
+                    <p style="font-size:13px; opacity:0.75; margin-top:4px">Four fixed tabs, persistent across the app. The same model, everywhere.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 08 BEFORE / AFTER -->
+        <section class="case-section" id="beforeafter">
+            <span class="section-tag">Section 08 — Before &amp; After</span>
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px">
+                <h2 class="section-heading" style="margin:0">See the difference.</h2>
+                <div class="toggle-pill" id="ba-toggle">
+                    <button type="button" data-mode="before">Original</button>
+                    <button type="button" data-mode="after" class="active">Redesign</button>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="compare-card">
+                    <div class="shot"><img data-ba-img data-before="h.jpeg" data-after="images/01-citymapper-redesign-home-screen.png" src="images/01-citymapper-redesign-home-screen.png" alt="Home screen comparison"></div>
+                    <div>
+                        <span class="frame-label">SCREEN A — HOME</span>
+                        <p data-ba-copy data-before-text="Promo banners, system alerts, and a dozen quick-launch tiles compete before search even appears." data-after-text="A single search field and two saved places lead. Everything secondary moved into context." style="margin-top:10px">A single search field and two saved places lead. Everything secondary moved into context.</p>
+                    </div>
+                </div>
+                <div class="compare-card">
+                    <div class="shot"><img data-ba-img data-before="lj.jpeg" data-after="images/02-live-journey-tracking-screen.png" src="images/02-live-journey-tracking-screen.png" alt="Live journey comparison"></div>
+                    <div>
+                        <span class="frame-label">SCREEN B — LIVE JOURNEY</span>
+                        <p data-ba-copy data-before-text="Every leg, alert, and diagnostic stat renders at once — the next step is buried in noise." data-after-text="The map leads and a single floating card surfaces only the next action, large and certain." style="margin-top:10px">The map leads and a single floating card surfaces only the next action, large and certain.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 09 DESIGN SYSTEM -->
+        <section class="case-section" id="designsystem">
+            <span class="section-tag">Section 09 — Design System Snapshot</span>
+            <h2 class="section-heading">A small kit, ruthlessly applied.</h2>
+
+            <div class="two-col">
+                <div class="process-block plain">
+                    <span class="frame-label">COLOUR</span>
+                    <div class="process-row cols-2" style="margin-top:16px; gap:10px">
+                        <div class="color-chip"><div class="swatch" style="background:#22E08D"></div><div class="info"><span class="hex">#22E08D</span><span class="use">Signal green</span></div></div>
+                        <div class="color-chip"><div class="swatch" style="background:#3A6CF0"></div><div class="info"><span class="hex">#3A6CF0</span><span class="use">Rail blue</span></div></div>
+                        <div class="color-chip"><div class="swatch" style="background:#FFB454"></div><div class="info"><span class="hex">#FFB454</span><span class="use">Delay amber</span></div></div>
+                        <div class="color-chip"><div class="swatch" style="background:#08090B"></div><div class="info"><span class="hex">#08090B</span><span class="use">Canvas</span></div></div>
+                        <div class="color-chip"><div class="swatch" style="background:#15191D"></div><div class="info"><span class="hex">#15191D</span><span class="use">Surface</span></div></div>
+                        <div class="color-chip"><div class="swatch" style="background:#EAEEF2"></div><div class="info"><span class="hex">#EAEEF2</span><span class="use">Text</span></div></div>
+                    </div>
+                    <p style="margin-top:14px; opacity:0.7; font-size:12.5px">Text-on-canvas contrast is 17.1:1 — well past WCAG AAA (7:1) — a floor set before any screen was drawn, not a pass applied after.</p>
+                </div>
+                <div class="process-block plain">
+                    <span class="frame-label">TYPE SCALE</span>
+                    <div style="margin-top:16px; display:flex; flex-direction:column; gap:14px">
+                        <div class="type-row"><span style="font-weight:900; font-size:28px">Display</span><span class="spec">Weight 800 · 34/40</span></div>
+                        <div class="type-row"><span style="font-weight:700; font-size:20px">Heading</span><span class="spec">Weight 700 · 23/28</span></div>
+                        <div class="type-row"><span style="font-weight:500; font-size:15px">Body keeps long text calm.</span><span class="spec">500 · 16/26</span></div>
+                        <div class="type-row"><span style="font-family:'Space Mono',monospace; font-size:12px">META · 24 MIN · £2.80</span><span class="spec">Mono · 13</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-block plain" style="max-width:100%">
+                <span class="frame-label">COMPONENTS</span>
+                <div class="process-row cols-2" style="margin-top:18px">
+                    <div>
+                        <span class="frame-label" style="background:transparent; color:var(--black); padding:0; font-size:11px">BUTTONS</span>
+                        <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px; align-items:flex-start">
+                            <span style="font-weight:700; background:var(--black); color:var(--warm-beige); padding:10px 20px; border:2px solid var(--black)">Start journey</span>
+                            <span style="font-weight:700; background:transparent; padding:10px 20px; border:2px solid var(--black)">See all routes</span>
+                        </div>
+                        <span class="frame-label" style="background:transparent; color:var(--black); padding:0; font-size:11px; margin-top:20px; display:block">CHIPS</span>
+                        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px">
+                            <span style="font-size:12px; font-weight:700; background:var(--black); color:var(--warm-beige); padding:6px 14px; border-radius:999px">Fastest</span>
+                            <span style="font-size:12px; font-weight:600; border:1px solid var(--black); padding:6px 14px; border-radius:999px">Fewest changes</span>
+                            <span style="font-size:12px; font-weight:600; border:1px solid var(--black); padding:6px 14px; border-radius:999px">Cheapest</span>
+                            <span style="font-size:12px; font-weight:600; background:#FFB454; padding:6px 14px; border-radius:999px">Delays</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="frame-label" style="background:transparent; color:var(--black); padding:0; font-size:11px">ROUTE CARD</span>
+                        <div style="margin-top:12px; border:2px solid var(--black); padding:16px">
+                            <div style="display:flex; justify-content:space-between; align-items:center"><span class="frame-label" style="font-size:10px">FASTEST</span><span style="font-weight:900; font-size:20px">24 <span style="font-size:12px; font-weight:500">min</span></span></div>
+                            <div style="display:flex; gap:6px; margin-top:14px; align-items:center">
+                                <div style="width:22px;height:22px;background:#22E08D;border:1px solid var(--black)"></div>
+                                <div style="width:14px;height:2px;background:var(--black)"></div>
+                                <div style="width:22px;height:22px;background:#3A6CF0;border:1px solid var(--black)"></div>
+                                <div style="width:14px;height:2px;background:var(--black)"></div>
+                                <div style="width:22px;height:22px;background:#0000;border:1px solid var(--black)"></div>
+                                <div style="flex:1"></div>
+                                <span style="font-weight:700">£2.80</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10 REFLECTION -->
+        <section class="case-section" id="reflection">
+            <span class="section-tag">Section 10 — Reflection</span>
+            <h2 class="section-heading">What two weeks with Citymapper taught me.</h2>
+            <div class="process-row">
+                <div class="process-block">
+                    <span class="frame-label">WHAT I LEARNED</span>
+                    <p style="margin-top:12px">Restraint is the feature. Every module I removed from the home screen made the one that stayed more confident. Editing down was harder — and more valuable — than adding.</p>
+                </div>
+                <div class="process-block">
+                    <span class="frame-label">WHAT I'D DO DIFFERENTLY</span>
+                    <p style="margin-top:12px">I'd test the live-journey card on the move, not at a desk. Glanceability claims only hold up when someone is actually walking to a platform with a bag in one hand.</p>
+                </div>
+                <div class="process-block">
+                    <span class="frame-label">NEXT STEPS</span>
+                    <p style="margin-top:12px">Prototype the disruption-to-reroute flow end to end, run a formal WCAG AA audit against every screen — not just the palette — and validate dynamic-type scaling with actual screen-reader users, then re-test against the original.</p>
+                </div>
+            </div>
+
+            <div class="process-block" style="max-width:100%; text-align:center; padding:40px">
+                <p style="font-size:clamp(20px,3vw,28px); font-weight:900; line-height:1.3; max-width:26ch; margin:0 auto">Good transit design disappears. If this is how you want your product to think, let's talk.</p>
+                <div style="margin-top:26px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap">
+                    <a href="mailto:mosse-2002@hotmail.co.uk?subject=Citymapper%20case%20study" class="cta-button" style="margin-top:0">EMAIL ME</a>
+                    <a href="#mockups" class="cta-button ghost" style="margin-top:0">REVISIT THE SCREENS</a>
+                </div>
+            </div>
+        </section>
+
+        <div style="width:100%; max-width:1100px; border-top:3px solid var(--black); padding-top:28px">
+            <div class="footer-contact">
+                <div class="col">
+                    <span class="k">Contact</span>
+                    <span class="v">Mohamed Muudey · Product Designer</span>
+                    <a href="mailto:mosse-2002@hotmail.co.uk">mosse-2002@hotmail.co.uk</a>
+                </div>
+                <div class="col">
+                    <span class="k">Elsewhere</span>
+                    <a href="https://www.linkedin.com/in/mohamed-muudey-5355121b0" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="../../index.html#archive">Portfolio</a>
+                </div>
+            </div>
+            <div class="site-footer-note">MOHAMED MUUDEY // CITYMAPPER CASE STUDY, 2025</div>
+            <a href="../../index.html#archive" class="back-to-archive">&larr; BACK TO ARCHIVE</a>
+        </div>
+    </main>
+
+<script>
+(function () {
+    'use strict';
+    var toggle = document.getElementById('ba-toggle');
+    if (!toggle) return;
+    var buttons = toggle.querySelectorAll('button');
+    buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var mode = btn.getAttribute('data-mode');
+            buttons.forEach(function (b) { b.classList.toggle('active', b === btn); });
+            document.querySelectorAll('[data-ba-img]').forEach(function (img) {
+                img.src = mode === 'before' ? img.getAttribute('data-before') : img.getAttribute('data-after');
+            });
+            document.querySelectorAll('[data-ba-copy]').forEach(function (p) {
+                p.textContent = mode === 'before' ? p.getAttribute('data-before-text') : p.getAttribute('data-after-text');
+            });
+        });
+    });
+})();
+</script>
+</body>
+</html>

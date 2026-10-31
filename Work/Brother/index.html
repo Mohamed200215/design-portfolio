@@ -1,0 +1,423 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BROTHER // BRAND IDENTITY — MM_ARCHIVE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --concrete-gray: #B4B4B4;
+            --warm-beige: #D9D2C5;
+            --black: #000000;
+            --off-black: #1A1A1A;
+            --white: #F2F2F2;
+            --scanline: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: crosshair;
+        }
+
+        a, button, input[type="submit"], input[type="button"], [role="button"] { cursor: pointer; }
+
+        html, body {
+            overflow-x: hidden;
+            min-height: 100%;
+        }
+
+        body {
+            background-color: var(--concrete-gray);
+            color: var(--black);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(var(--scanline) 50%, transparent 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 101;
+            opacity: 0.3;
+        }
+
+        header {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            padding: 20px;
+            border-bottom: 2px solid var(--black);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            background-color: var(--warm-beige);
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: var(--black);
+            text-decoration: none;
+            padding: 2px 8px;
+            transition: all 0.1s;
+        }
+
+        .nav-links a:hover {
+            background: var(--black);
+            color: var(--warm-beige);
+        }
+
+        .archive-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 40px;
+            border-bottom: 4px solid var(--black);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .archive-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 64px;
+            text-transform: uppercase;
+            line-height: 0.8;
+            letter-spacing: -3px;
+        }
+
+        .archive-meta {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            text-align: right;
+            max-width: 360px;
+        }
+
+        .archive-meta .tag {
+            display: block;
+            opacity: 0.6;
+            margin-bottom: 6px;
+        }
+
+        .scroll-hint {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 14px;
+            opacity: 0.7;
+            transform: rotate(-2deg);
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .gallery-scroll {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 80px;
+            gap: 40px;
+        }
+
+        .process-row {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 8px;
+        }
+
+        .process-block {
+            border: 3px solid var(--black);
+            background: var(--warm-beige);
+            box-shadow: 6px 6px 0px var(--black);
+            padding: 20px;
+            position: relative;
+        }
+
+        .process-block .frame-label {
+            position: static;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .process-block p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .process-block ul {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .process-row { grid-template-columns: 1fr; }
+        }
+
+        .gallery-frame {
+            width: 100%;
+            max-width: 1000px;
+            border: 3px solid var(--black);
+            box-shadow: 10px 10px 0px var(--black);
+            background: var(--off-black);
+            position: relative;
+        }
+
+        .gallery-frame img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .frame-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--black);
+            color: var(--warm-beige);
+            padding: 4px 10px;
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            z-index: 2;
+        }
+
+        .registration-mark {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--black);
+            border-radius: 50%;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .registration-mark::before { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--black); }
+        .registration-mark::after { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--black); }
+
+        .reg-tl { top: 10px; left: 10px; }
+        .back-to-archive {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 14px 28px;
+            border: 2px solid var(--black);
+            background: var(--warm-beige);
+            color: var(--black);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            box-shadow: 6px 6px 0px var(--black);
+            transition: all 0.15s;
+        }
+        .back-to-archive:hover {
+            background: var(--black);
+            color: var(--warm-beige);
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px var(--black);
+        }
+        .reg-br { bottom: 10px; right: 10px; }
+
+        @media (max-width: 640px) {
+            header {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                text-align: center;
+                padding: 12px 16px;
+            }
+            .nav-links {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 10px 16px;
+            }
+            .archive-heading {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px 16px 16px;
+            }
+            .archive-title { font-size: 15vw; }
+            .archive-meta { text-align: left; max-width: none; }
+            .gallery-scroll { padding: 24px 12px 60px; gap: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-mark reg-tl"></div>
+    <div class="registration-mark reg-br"></div>
+
+    <header>
+        <div class="status">SYSTEM: ACTIVE // 124.0.0.1</div>
+        <div class="logo">MM_UXUI_PRD_DSGN</div>
+        <nav class="nav-links">
+            <a href="../../index.html#home">HOME</a>
+            <a href="../../About/index.html">ABOUT/PERSONAL</a>
+            <a href="../../index.html#archive" style="background: var(--black); color: var(--warm-beige);">ARCHIVE</a>
+            <a href="../../index.html#contact">CONTACT</a>
+        </nav>
+    </header>
+
+    <div class="archive-heading">
+        <h1 class="archive-title">Brother</h1>
+        <div class="archive-meta">
+            <span class="tag">SELF-INITIATED // BRAND IDENTITY CONCEPT</span>
+            Brand identity concept for Brother — a mentorship charity pairing young people with an "older sibling" figure. Logo, mascot, and full campaign rollout. No real client — Brother is a fictional organization built to explore the identity end to end.
+            <span class="scroll-hint">scroll down ↓</span>
+        </div>
+    </div>
+
+    <main class="gallery-scroll">
+        <div class="process-row">
+            <div class="process-block">
+                <span class="frame-label">THE BRIEF</span>
+                <p>Most mentorship-charity branding reads as either clinical NGO (blue gradients, stock photography) or twee and childish — neither builds trust with a skeptical teenager or makes a mark a 16-year-old would actually wear. The brief I set myself: a mark that could hold up on a T-shirt, a tote bag, and stadium signage next to a real streetwear brand, without losing the warmth the mission needs.</p>
+            </div>
+            <div class="process-block">
+                <span class="frame-label">KEY DECISIONS</span>
+                <ul>
+                    <li>Two bears, not one — the mentor/mentee pairing made literal, not an abstract mark.</li>
+                    <li>Vintage collegiate script wordmark — borrows trust signals from varsity/athletics branding instead of typical charity sans-serif.</li>
+                    <li>Navy/cream base + one flexible accent colour, so each touchpoint (stadium, apparel, digital) can feel distinct without breaking the system.</li>
+                    <li>Applications chosen to mirror real culture-brand rollouts (box truck, stadium takeover, staff lanyard) over standard nonprofit collateral like brochures.</li>
+                </ul>
+            </div>
+            <div class="process-block">
+                <span class="frame-label">WHAT I'D TEST NEXT</span>
+                <p>This is self-initiated, so I have no feedback from a real mentee, mentor, or donor. I'd want to show the mark next to the audience's actual everyday brands to see if it reads as "for me" rather than "for my school," and check the two-bear mark stays legible at the smallest sizes — pin, app icon — before shrinking it further.</p>
+            </div>
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">01 / LOGOTYPE</span>
+            <img src="page1.jpg" alt="Brother logotype on cream background">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">02 / COLOR VARIANTS</span>
+            <img src="page2.jpg" alt="Brother logotype in navy and yellow color variants">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">03 / LOCKUP</span>
+            <img src="page3.jpg" alt="Br monogram lockup in two colorways">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">04 / MASCOT</span>
+            <img src="page5.jpg" alt="Two-bear mascot concept and color rationale">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">05 / MISSION</span>
+            <img src="page4.jpg" alt="Brother charity mission statement">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">06 / SIGNAGE</span>
+            <img src="page6.jpg" alt="Brother wordmark on interior wall signage mockup">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">07 / EXTERIOR SIGNAGE</span>
+            <img src="Bike Parking Mockup_2.png" alt="Brother bike parking signage with wordmark and bike icon, installed in a city park">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">08 / STATIONERY</span>
+            <img src="page8.jpg" alt="Brother coffee cup and business card mockup">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">09 / PACKAGING</span>
+            <img src="pack.png" alt="Brother shipping box with Br monogram sticker and wordmark side print">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">10 / STAFF PASS</span>
+            <img src="id card.png" alt="Brother staff ID card in a clear lanyard pouch, reading STAFF, Oscar Smith, and the Brother wordmark over a translucent Br monogram">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">11 / APPAREL DROP</span>
+            <img src="new work/clothes.png" alt="Brother wordmark hoodie and Br monogram cap">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">12 / T-SHIRT</span>
+            <img src="t shirt.png" alt="Br bear mascot and Brother wordmark printed on a green and yellow colorblock t-shirt, worn on-model">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">13 / T-SHIRT — WORDMARK</span>
+            <img src="t shirt. 2.png" alt="Brother wordmark printed on a cream t-shirt, worn on-model">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">14 / PIN</span>
+            <img src="page12.jpg" alt="Brother mascot printed on a small pin badge">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">15 / MERCH — TENNIS BALL</span>
+            <img src="Tennis Ball Mockup 1.png" alt="Br monogram printed on a tennis ball">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">16 / PHONE CASE</span>
+            <img src="new work/ai-creation-cmsasm57415am0jtvahk34n76-1785614461841.png" alt="Brother bear mascot sticker on a green phone case">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">17 / STICKER — DIE CUT</span>
+            <img src="Luxury Sticker Mockup_1.png" alt="Die-cut Brother sticker with bear silhouettes and wordmark, applied to a dark laptop lid">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">18 / VEHICLE LIVERY</span>
+            <img src="new work/Box Truck Mockup.png" alt="Brother wordmark and bear silhouettes painted on the side of a box truck">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">19 / POSTER</span>
+            <img src="page11.jpg" alt="Brother recruitment poster mockup on a building exterior">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">20 / BILLBOARD</span>
+            <img src="page13.jpg" alt="Brother campaign billboard mockup">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">21 / STADIUM ACTIVATION</span>
+            <img src="new work/Stadium.png" alt="Brother logo and bear mascot unfurled as a giant banner across a stadium pitch by volunteers">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">22 / DIGITAL</span>
+            <img src="new work/Free Devices on Desk Mockup.png" alt="Brother charity website shown on a MacBook Pro screen">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">23 / CAMPAIGN</span>
+            <img src="page15.jpg" alt="Brother campaign Instagram grid — hallway logo mural, donation box with Br monogram, and volunteer wearing a Brother-branded bib">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">24 / CLOSING</span>
+            <img src="page16.jpg" alt="Brother thank you closing slide">
+        </div>
+        <a href="../../index.html#archive" class="back-to-archive">&larr; BACK TO ARCHIVE</a>
+    </main>
+</body></html>

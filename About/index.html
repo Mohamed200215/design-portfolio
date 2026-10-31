@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABOUT / PERSONAL // Mohamed Muudey</title>
+    <meta name="description" content="About Mohamed Muudey, and a look at the off-duty, fan-made design work.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --concrete-gray: #B4B4B4;
+            --warm-beige: #D9D2C5;
+            --black: #000000;
+            --off-black: #1A1A1A;
+            --white: #F2F2F2;
+            --scanline: rgba(0, 0, 0, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        a, button, input[type="submit"], input[type="button"], [role="button"] { cursor: pointer; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--concrete-gray);
+            color: var(--black);
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(var(--scanline) 50%, transparent 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 101;
+            opacity: 0.3;
+        }
+
+        .filter-container { position: absolute; height: 0; width: 0; overflow: hidden; }
+
+        .registration-mark {
+            position: fixed;
+            width: 40px; height: 40px;
+            border: 1px solid var(--black);
+            border-radius: 50%;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 102;
+        }
+        .registration-mark::before { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--black); }
+        .registration-mark::after { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--black); }
+        .reg-top-left { top: 10px; left: 10px; }
+        .reg-bottom-right { bottom: 10px; right: 10px; }
+
+        /* ---------- nav ---------- */
+        header {
+            position: sticky;
+            top: 0;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 18px 20px;
+            border-bottom: 2px solid var(--black);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 200;
+            background-color: var(--warm-beige);
+            transition: background-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        header.nav-scrolled {
+            background-color: rgba(217, 210, 197, 0.88);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.06);
+        }
+
+        .nav-links { display: flex; gap: 24px; justify-content: flex-end; }
+        .nav-links a { color: var(--black); text-decoration: none; padding: 2px 8px; transition: all 0.1s; }
+        .nav-links a:hover, .nav-links a.active { background: var(--black); color: var(--warm-beige); }
+        .nav-links a:focus-visible { outline: 2px solid var(--black); outline-offset: 3px; }
+
+        /* ================= DOSSIER ================= */
+        main { padding: 90px 100px 40px; }
+
+        .dossier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 8px solid var(--black);
+            padding-bottom: 40px;
+            margin-bottom: 50px;
+        }
+
+        .dossier-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 80px;
+            text-transform: uppercase;
+            line-height: 0.8;
+            letter-spacing: -4px;
+        }
+
+        .dossier-id { font-family: 'Space Mono', monospace; font-size: 14px; text-align: right; }
+
+        .bio-manifesto-row { display: grid; grid-template-columns: repeat(12, 1fr); gap: 50px; margin-bottom: 90px; }
+
+        .bio-section {
+            grid-column: 1 / 8;
+            background: var(--warm-beige);
+            border: 4px solid var(--black);
+            padding: 50px 50px 60px;
+            box-shadow: 15px 15px 0px var(--black);
+            position: relative;
+        }
+
+        .bio-tag {
+            position: absolute;
+            top: -20px; left: 20px;
+            background: var(--black);
+            color: var(--warm-beige);
+            padding: 4px 12px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+        }
+
+        .bio-text { font-size: 18px; font-weight: 400; line-height: 1.8; color: var(--black); margin-bottom: 30px; }
+        .bio-text:last-child { margin-bottom: 0; }
+        .bio-text b { font-weight: 900; text-decoration: underline; }
+
+        .manifesto-block {
+            grid-column: 8 / 13;
+            background: var(--black);
+            color: var(--warm-beige);
+            padding: 50px;
+            font-family: 'Space Mono', monospace;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+        }
+
+        .manifesto-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid var(--warm-beige); display: inline-block; }
+        .tech-pack { display: flex; flex-direction: column; gap: 30px; }
+        .tech-cat-title { font-size: 12px; font-weight: 700; margin-bottom: 12px; opacity: 0.7; letter-spacing: 1px; }
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tech-tags span { border: 1px solid var(--warm-beige); padding: 6px 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; transition: all 0.1s; }
+        .tech-tags span:hover { background: var(--warm-beige); color: var(--black); }
+
+        /* ================= OFF-DUTY ARCHIVE ================= */
+        .archive-header { margin-bottom: 40px; border-bottom: 4px solid var(--black); padding-bottom: 20px; }
+        .archive-title { font-size: 4.5vw; font-weight: 900; text-transform: uppercase; line-height: 0.8; letter-spacing: -0.04em; }
+
+        .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 60px; align-items: start; }
+
+        .project-card {
+            min-width: 0;
+            border: 2px solid var(--black);
+            background: var(--warm-beige);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 8px 8px 0px var(--black);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .project-card:hover { transform: translate(-4px, -4px); box-shadow: 12px 12px 0px var(--black); }
+
+        .project-thumb { width: 100%; aspect-ratio: 16/9; background: var(--concrete-gray); border-bottom: 2px solid var(--black); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .project-thumb img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.2); opacity: 0.8; transition: filter 0.25s, opacity 0.25s; }
+        .project-card:hover .project-thumb img { filter: grayscale(0) contrast(1.05); opacity: 1; }
+
+        .project-info { padding: 16px; font-family: 'Space Mono', monospace; }
+        .project-id { font-size: 10px; font-weight: 700; background: var(--black); color: var(--warm-beige); padding: 2px 6px; display: inline-block; margin-bottom: 8px; }
+        .project-name { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.8rem; text-transform: uppercase; line-height: 1; margin-bottom: 12px; overflow-wrap: break-word; }
+        .project-meta { font-size: 10px; display: flex; justify-content: space-between; border-top: 1px solid rgba(0,0,0,0.2); padding-top: 8px; }
+
+        .stamp-small {
+            position: absolute; top: 10px; right: 10px;
+            border: 2px solid var(--black);
+            padding: 2px 8px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 900;
+            font-size: 10px;
+            transform: rotate(-10deg);
+            background: var(--warm-beige);
+            z-index: 5;
+        }
+
+        .marker-scribble {
+            font-family: 'Permanent Marker', cursive;
+            color: var(--off-black);
+            opacity: 0.7;
+            font-size: 20px;
+            transform: rotate(-4deg);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 60px;
+        }
+        .marker-scribble:hover { opacity: 1; }
+
+        footer {
+            border-top: 2px solid var(--black);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        /* ================= scroll reveal ================= */
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.in-view { opacity: 1; transform: translateY(0); }
+        .reveal-stagger.in-view { transition-delay: calc(var(--i, 0) * 90ms); }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .reveal { opacity: 1; transform: none; transition: none; }
+        }
+
+        /* ================= responsive ================= */
+        @media (max-width: 1024px) {
+            main { padding: 60px 24px 20px; }
+            .dossier-title { font-size: 42px; letter-spacing: -2px; }
+            .dossier-header { flex-direction: column; align-items: flex-start; border-bottom-width: 4px; padding-bottom: 20px; }
+            .dossier-id { text-align: left; margin-top: 16px; }
+            .bio-manifesto-row { grid-template-columns: 1fr; gap: 30px; margin-bottom: 60px; }
+            .bio-section, .manifesto-block { grid-column: 1 / -1; }
+            .bio-section { padding: 30px 24px; box-shadow: 8px 8px 0px var(--black); }
+            .manifesto-block { padding: 30px 24px; }
+            .project-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+            .archive-title { font-size: 9vw; }
+        }
+
+        @media (max-width: 640px) {
+            header {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                gap: 8px;
+                padding: 12px 16px;
+                text-align: center;
+            }
+            header .status { display: none; }
+            .nav-links { justify-content: center; flex-wrap: wrap; gap: 8px 14px; }
+            .project-grid { grid-template-columns: 1fr; }
+            .archive-title { font-size: 12vw; overflow-wrap: break-word; }
+            .project-name { overflow-wrap: break-word; }
+            .registration-mark { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-mark reg-top-left"></div>
+    <div class="registration-mark reg-bottom-right"></div>
+
+    <header id="site-nav">
+        <div class="status">SUBJECT: M. MUUDEY // STATUS: UNRESTRICTED</div>
+        <div class="logo">PERSONNEL_DOSSIER</div>
+        <nav class="nav-links">
+            <a href="../index.html#home">HOME</a>
+            <a href="../index.html#archive">ARCHIVE</a>
+            <a href="#" class="active">ABOUT/PERSONAL</a>
+            <a href="../index.html#contact">CONTACT</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="dossier-header reveal">
+            <h1 class="dossier-title">ABOUT_OPERATOR</h1>
+            <div class="dossier-id">
+                SERIAL: MM-8942-X<br>
+                CLEARANCE: LEVEL_05<br>
+                ORIGIN: 40.7128&deg; N, 74.0060&deg; W
+            </div>
+        </div>
+
+        <div class="bio-manifesto-row">
+            <div class="bio-section reveal">
+                <div class="bio-tag">BIOGRAPHICAL_DATA</div>
+                <p class="bio-text">
+                    Hey, I'm Mohamed. I'm a <b>UX/UI &amp; Product Designer</b> with a <b>BSc in Computer Science</b>. I care about the details — typography, layout, color, motion — and my technical background means I design with a real sense of how interfaces actually get built, not just how they look in a mockup.
+                </p>
+                <p class="bio-text">
+                    I've worked across branding, app design, and <b>front-end development</b>, and I'm comfortable adapting my style to whatever a project needs, whether that's clean and minimal, bold and expressive, or anything in between. What drives me is how <b>design makes people feel</b>. A great product isn't just functional — it has a <b>personality, an energy</b>. It makes you want to use it. That's the standard I hold my work to. I'm always looking for interesting projects and the right opportunities to collaborate. If you think we could make something great together, I'd love to hear from you.
+                </p>
+            </div>
+
+            <div class="manifesto-block reveal">
+                <h3 class="manifesto-title">TECH_PACK</h3>
+                <div class="tech-pack">
+                    <div class="tech-category">
+                        <div class="tech-cat-title">[ DESIGN ]</div>
+                        <div class="tech-tags">
+                            <span>FIGMA</span>
+                            <span>UI/UX</span>
+                            <span>DESIGN SYSTEMS</span>
+                            <span>BRANDING</span>
+                            <span>PROTOTYPING</span>
+                            <span>ADOBE CREATIVE SUITE</span>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <div class="tech-cat-title">[ CODE ]</div>
+                        <div class="tech-tags">
+                            <span>HTML/CSS</span>
+                            <span>JAVASCRIPT</span>
+                            <span>REACT</span>
+                            <span>FRONTEND</span>
+                            <span>WEBGL</span>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <div class="tech-cat-title">[ MINDSET ]</div>
+                        <div class="tech-tags">
+                            <span>USER RESEARCH</span>
+                            <span>ADAPTABILITY</span>
+                            <span>COLLABORATION</span>
+                            <span>CONCEPT TO SHIP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="archive-header reveal">
+            <h1 class="archive-title">OFF_DUTY_ARCHIVE</h1>
+            <div style="font-family: 'Space Mono', monospace; font-size: 12px; margin-top: 10px;">
+                PERSONAL // NOT PART OF CLIENT/PROFESSIONAL RECORD — JUST FOR FUN
+            </div>
+        </div>
+
+        <div class="project-grid">
+            <a href="../Work/Beanies/index.html" class="project-card reveal reveal-stagger" style="--i:0">
+                <div class="stamp-small">FAN_MADE</div>
+                <div class="project-thumb"><img src="../Work/covers/beanies-cover.jpg" alt="Beanies fan concept cover"></div>
+                <div class="project-info">
+                    <span class="project-id">ID: OFF_001</span>
+                    <h2 class="project-name">BEANIES</h2>
+                    <div class="project-meta">Fan-made beanie concept mockups — Fire Force, DP, TMNT, and Soul Eater. Just for fun.</div>
+                </div>
+                <span class="marker-note">WAITING...</span>
+            </a>
+
+            <a href="../Work/T90/index.html" class="project-card reveal reveal-stagger" style="--i:1">
+                <div class="stamp-small">FAN_MADE</div>
+                <div class="project-thumb"><img src="../Work/covers/t90-cover.jpg" alt="T90 tribute campaign cover"></div>
+                <div class="project-info">
+                    <span class="project-id">ID: OFF_002</span>
+                    <h2 class="project-name">T90</h2>
+                    <div class="project-meta">A fan-made tribute campaign for the Nike Total 90 — nostalgia poster, magazine spread, and print concepts. Just for fun.</div>
+                </div>
+            </a>
+
+            <a href="../Work/BlueLock/index.html" class="project-card reveal reveal-stagger" style="--i:2">
+                <div class="stamp-small">FAN_MADE</div>
+                <div class="project-thumb"><img src="../Work/covers/bluelock-cover.jpg" alt="Blue Lock kits fan concept cover"></div>
+                <div class="project-info">
+                    <span class="project-id">ID: OFF_003</span>
+                    <h2 class="project-name">BLUE LOCK KITS</h2>
+                    <div class="project-meta">Fan-made football kit concepts for Blue Lock characters — five club kits plus title art. Just for fun.</div>
+                </div>
+            </a>
+
+            <a href="../Work/CDCovers/index.html" class="project-card reveal reveal-stagger" style="--i:3">
+                <div class="stamp-small">FAN_MADE</div>
+                <div class="project-thumb"><img src="../Work/covers/cdcovers-cover.jpg" alt="CD and game cover fan concepts"></div>
+                <div class="project-info">
+                    <span class="project-id">ID: OFF_004</span>
+                    <h2 class="project-name">CD / GAME COVERS</h2>
+                    <div class="project-meta">Fan-made game box art concepts — Samurai Champloo, YuYu Hakusho, Power Rangers, Bakugan, Afro Samurai, and Soul Eater. Just for fun.</div>
+                </div>
+            </a>
+
+            <a href="../Work/Logo%20page/design-907b3950-f401-42c0-8f57-3ae9c3d79c39.html" class="project-card reveal reveal-stagger" style="--i:4">
+                <div class="stamp-small">ACTIVE_SIGHT</div>
+                <div class="project-thumb"><img src="../Work/covers/logos.png" alt="Logos cover"></div>
+                <div class="project-info">
+                    <span class="project-id">ID: OFF_005</span>
+                    <h2 class="project-name">LOGOS</h2>
+                    <div class="project-meta">Brandmark archive — logos and crests designed for sports, tech, and esports clients.</div>
+                </div>
+            </a>
+
+            <a href="../Work/posters/design-e0f854ff-111f-4a51-8a0a-86e538d0ee48.html" class="project-card reveal reveal-stagger" style="--i:5">
+                <div class="stamp-small">DECLASS_2023</div>
+                <div class="project-thumb"><img src="../Work/covers/Post.png" alt="Where Posters Are Made cover"></div>
+                <div class="project-info">
+                    <span class="project-id">ID: OFF_006</span>
+                    <h2 class="project-name">Where Posters Are Made</h2>
+                    <div class="project-meta">Full poster archive — sports illustration, fan art, and ad-style graphic design. 21 prints on file.</div>
+                </div>
+            </a>
+        </div>
+
+        <a href="../index.html#archive" class="marker-scribble reveal">&larr; BACK TO PROFESSIONAL ARCHIVE</a>
+    </main>
+
+    <footer>
+        <span>MM_UXUI_PRD_DSGN &copy; 2026</span>
+        <span>END_OF_FILE // NO_FURTHER_RECORDS</span>
+    </footer>
+
+    <script>
+        const nav = document.getElementById('site-nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('nav-scrolled', window.scrollY > 20);
+        }, { passive: true });
+
+        const revealEls = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        revealEls.forEach(el => revealObserver.observe(el));
+
+        setInterval(() => {
+            const items = document.querySelectorAll('.dossier-id, .bio-tag, .stamp-small');
+            const target = items[Math.floor(Math.random() * items.length)];
+            if (!target) return;
+            target.style.opacity = '0.6';
+            setTimeout(() => { target.style.opacity = '1'; }, 100);
+        }, 3200);
+    </script>
+</body>
+</html>

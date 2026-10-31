@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PULSE // CREATOR DASHBOARD — MM_ARCHIVE</title>
+<meta name="description" content="A unified analytics dashboard that helps independent music producers turn scattered streaming data into decisions. Case study by Mohamed Muudey.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pulse, Creator Dashboard Case Study">
+<meta property="og:description" content="A unified analytics dashboard that helps independent music producers turn scattered streaming data into decisions. Case study by Mohamed Muudey.">
+<meta property="og:image" content="assets/pulse-overview.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --concrete-gray: #B4B4B4;
+        --warm-beige: #D9D2C5;
+        --black: #000000;
+        --off-black: #1A1A1A;
+        --white: #F2F2F2;
+        --scanline: rgba(0, 0, 0, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+    a, button, input, [role="button"] { cursor: pointer; }
+    html, body { overflow-x: hidden; min-height: 100%; }
+    img { max-width: 100%; display: block; }
+    ::selection { background: var(--black); color: var(--warm-beige); }
+
+    body {
+        background-color: var(--concrete-gray);
+        color: var(--black);
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    header.site-header {
+        display: grid; grid-template-columns: 1fr auto 1fr;
+        padding: 20px; border-bottom: 2px solid var(--black);
+        font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1px;
+        z-index: 10; background-color: var(--warm-beige); flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 24px; justify-content: flex-end; }
+    .nav-links a, .nav-links button {
+        color: var(--black); text-decoration: none; padding: 2px 8px;
+        background: none; border: none; font: inherit; letter-spacing: inherit; text-transform: inherit;
+        transition: all 0.1s;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: var(--black); color: var(--warm-beige); }
+
+    .archive-heading {
+        padding: 40px; border-bottom: 4px solid var(--black);
+    }
+    .archive-title {
+        font-family: 'Inter', sans-serif; font-weight: 900; font-size: 72px;
+        text-transform: uppercase; line-height: 0.85; letter-spacing: -3px;
+    }
+    .archive-meta {
+        font-family: 'Space Mono', monospace; font-size: 13px; max-width: 640px; margin-top: 16px;
+    }
+    .archive-meta .tag { display: block; opacity: 0.6; margin-bottom: 10px; font-weight: 700; }
+    .archive-meta .lede-text { font-family: 'Inter', sans-serif; font-size: 20px; line-height: 1.4; margin-top: 4px; max-width: 700px; }
+    .scroll-hint {
+        font-family: 'Permanent Marker', cursive; font-size: 14px; opacity: 0.7;
+        transform: rotate(-2deg); display: inline-block; margin-top: 16px;
+    }
+
+    .cta-button {
+        display: inline-flex; align-items: center; gap: 10px; margin-top: 28px;
+        padding: 14px 26px; border: 3px solid var(--black); background: var(--black);
+        color: var(--warm-beige); font-family: 'Space Mono', monospace; font-weight: 700;
+        font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
+        text-decoration: none; box-shadow: 6px 6px 0px var(--off-black); transition: all 0.15s;
+    }
+    .cta-button:hover { background: var(--warm-beige); color: var(--black); transform: translate(-3px,-3px); box-shadow: 9px 9px 0px var(--black); }
+    .cta-button.ghost { background: var(--warm-beige); color: var(--black); }
+    .cta-button.ghost:hover { background: var(--black); color: var(--warm-beige); }
+
+    .stat-grid {
+        display: grid; grid-template-columns: repeat(4,1fr);
+        border-top: 3px solid var(--black); border-bottom: 3px solid var(--black);
+        margin-top: 36px;
+    }
+    .stat-grid > div { padding: 18px 22px; border-right: 2px solid var(--black); }
+    .stat-grid > div:last-child { border-right: none; }
+    .stat-grid .k { font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; opacity:0.6; margin-bottom:6px; }
+    .stat-grid .v { font-size: 16px; font-weight: 700; }
+
+    .stat-box {
+        margin-top: 32px; border: 3px solid var(--black); background: var(--warm-beige);
+        box-shadow: 6px 6px 0px var(--black); padding: 28px 32px;
+        display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+    }
+    .stat-box .num { font-size: clamp(40px,6vw,64px); font-weight: 900; line-height: 1; font-family:'Inter',sans-serif; }
+    .stat-box .k { font-family:'Space Mono', monospace; font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; opacity:0.65; margin-bottom:6px; }
+    .stat-box p { font-size: 14.5px; line-height: 1.6; margin:0; max-width: 520px; }
+    .stat-box a { color: var(--black); text-decoration: underline; }
+
+    .toc { display: flex; flex-wrap: wrap; row-gap: 8px; font-size: 12px; font-family:'Space Mono', monospace; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 32px; padding-top: 20px; border-top: 2px solid var(--black); }
+    .toc-label { opacity: 0.6; margin-right: 18px; }
+    .toc a { color: var(--black); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .toc span.sep { opacity: 0.4; margin: 0 12px; }
+
+    .gallery-scroll { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 40px 20px 80px; gap: 40px; }
+
+    .case-section { width: 100%; max-width: 1100px; display: flex; flex-direction: column; gap: 28px; }
+    .section-tag {
+        font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+        background: var(--black); color: var(--warm-beige); padding: 6px 12px;
+        display: inline-block; width: fit-content; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .section-heading { font-family:'Inter',sans-serif; font-weight:900; font-size: clamp(28px,4vw,42px); line-height:1.05; letter-spacing:-0.02em; max-width: 800px; }
+    .lede { font-size: 16px; line-height: 1.65; max-width: 720px; }
+
+    .process-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+    .process-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .process-row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 900px) { .process-row, .process-row.cols-2, .process-row.cols-4 { grid-template-columns: 1fr; } }
+
+    .process-block { border: 3px solid var(--black); background: var(--warm-beige); box-shadow: 6px 6px 0px var(--black); padding: 22px; }
+    .process-block.plain { background: var(--white); box-shadow: 4px 4px 0px var(--black); }
+    .process-block .frame-label { position: static; display: inline-block; margin-bottom: 12px; }
+    .process-block p { font-size: 14px; line-height: 1.6; margin: 0; }
+    .process-block ul { margin: 0; padding-left: 18px; font-size: 13.5px; line-height: 1.6; }
+    .process-block .big-letter { font-size: 34px; font-weight: 900; margin-bottom: 12px; font-family:'Inter',sans-serif; }
+    .process-block .block-title { font-size: 18px; font-weight: 700; line-height: 1.3; margin-bottom: 10px; }
+
+    .frame-label {
+        font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+        background: var(--black); color: var(--warm-beige); padding: 4px 10px;
+    }
+
+    .gallery-frame { width: 100%; border: 3px solid var(--black); box-shadow: 10px 10px 0px var(--black); background: var(--off-black); position: relative; }
+    .gallery-frame > .frame-label { position: absolute; top: -2px; left: -2px; z-index: 2; }
+    .gallery-frame img, .gallery-frame video { display: block; width: 100%; height: auto; }
+    .gallery-frame .frame-caption { padding: 12px 16px; border-top: 3px solid var(--black); background: var(--warm-beige); font-family: 'Space Mono', monospace; font-size: 12px; }
+    .gallery-frame .media-wrap { position: relative; }
+    .callout-tag {
+        position: absolute; display: inline-flex; align-items: center; gap: 8px;
+        background: var(--black); color: var(--warm-beige); border: 1px solid var(--warm-beige);
+        font-family: 'Space Mono', monospace; font-size: 11px; padding: 6px 10px; max-width: calc(100% - 24px);
+    }
+    .callout-dot { width: 20px; height: 20px; background: var(--warm-beige); color: var(--black); font-weight: 800; font-size: 11px; display: grid; place-items: center; flex: none; }
+    .callout-tl { top: 16px; left: 16px; } .callout-tr { top: 16px; right: 16px; } .callout-bl { bottom: 16px; left: 16px; }
+
+    .quote-block { border: 3px solid var(--black); background: var(--white); box-shadow: 6px 6px 0px var(--black); padding: 26px 28px; position: relative; }
+    .quote-block p { font-family:'Inter',sans-serif; font-size: 18px; line-height: 1.45; font-weight: 600; margin: 0 0 14px; }
+    .quote-block footer { font-family:'Space Mono', monospace; font-size: 12px; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .callout-box { border: 3px solid var(--black); padding: 30px 36px; display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap; background: var(--warm-beige); box-shadow: 8px 8px 0px var(--black); }
+    .callout-box .big { font-size: clamp(32px,6vw,60px); font-weight: 900; line-height: 1; font-family:'Inter',sans-serif; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+    .list-box { border: 3px solid var(--black); padding: 24px 26px; background: var(--white); box-shadow: 6px 6px 0px var(--black); }
+    .list-box.made-cut { background: var(--warm-beige); }
+    .list-box .k { font-family:'Space Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+    .list-box ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.5; }
+    .list-box li { display: flex; gap: 10px; }
+    .list-box li span.mark { font-weight: 900; flex: none; }
+
+    .ia-diagram { border: 3px solid var(--black); background: var(--white); box-shadow: 8px 8px 0px var(--black); }
+    .ia-diagram .ia-caption { padding: 14px 20px; border-bottom: 3px solid var(--black); background: var(--warm-beige); font-family:'Space Mono', monospace; font-size: 12px; }
+    .ia-diagram .ia-body { padding: 32px 24px; display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+    .ia-node { border: 2px solid var(--black); padding: 12px 20px; font-weight: 700; font-size: 14px; }
+    .ia-node.primary { border-width: 3px; box-shadow: 4px 4px 0px var(--black); }
+    .ia-node.dashed { border-style: dashed; font-weight: 400; opacity: 0.75; }
+    .ia-connector { width: 2px; height: 26px; background: var(--black); margin-left: 40px; }
+    .ia-row { display: flex; gap: 14px; flex-wrap: wrap; }
+    .ia-note { padding: 16px 24px; font-size: 12.5px; font-family:'Space Mono',monospace; border-top: 2px solid var(--black); background: var(--warm-beige); }
+
+    .reject-box { border: 3px solid var(--black); background: var(--white); box-shadow: 6px 6px 0px var(--black); padding: 30px 34px; display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: start; }
+    @media (max-width: 700px) { .reject-box { grid-template-columns: 1fr; } }
+    .reject-box .stamp { font-family:'Space Mono', monospace; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; border: 2px solid var(--black); padding: 6px 12px; white-space: nowrap; background: var(--warm-beige); transform: rotate(-2deg); }
+    .reject-box h4 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+    .reject-box p { font-size: 15px; line-height: 1.6; margin: 0; max-width: 640px; }
+
+    .code-block { border: 3px solid var(--black); box-shadow: 8px 8px 0px var(--black); background: var(--off-black); color: var(--warm-beige); }
+    .code-block .bar { display: flex; gap: 8px; padding: 12px 16px; border-bottom: 2px solid var(--black); align-items: center; background: var(--black); }
+    .code-block .bar span.dot { width: 10px; height: 10px; background: var(--warm-beige); opacity: 0.4; border-radius: 50%; }
+    .code-block .bar span.name { font-size: 12px; opacity: 0.7; margin-left: 8px; font-family: ui-monospace, monospace; }
+    .code-block pre { margin: 0; padding: 22px; font-family: 'Space Mono', ui-monospace, monospace; font-size: 12.5px; line-height: 1.7; overflow: auto; }
+    .code-block .kw { color: var(--warm-beige); font-weight: 700; }
+    .code-block .cm { opacity: 0.55; }
+    .code-block .str { color: #cbb98a; }
+
+    .mini-card { border: 2px solid var(--black); background: var(--white); }
+    .mini-card .body { min-height: 190px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 22px; text-align: center; }
+    .mini-card .label { padding: 12px 16px; border-top: 2px solid var(--black); font-family:'Space Mono', monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; background: var(--warm-beige); }
+    .mini-card .hint { font-weight: 400; text-transform: none; letter-spacing: normal; opacity: 0.6; }
+
+    .mobile-preview-card { position: relative; }
+    .mobile-preview-popup {
+        position: absolute; left: 50%; bottom: calc(100% + 14px); transform: translateX(-50%) translateY(10px) scale(0.96);
+        width: 220px; opacity: 0; visibility: hidden; pointer-events: none; z-index: 30;
+        transition: opacity .16s ease, transform .16s ease, visibility 0s linear .16s;
+    }
+    .mobile-preview-card:hover .mobile-preview-popup, .mobile-preview-card:focus-visible .mobile-preview-popup, .mobile-preview-card.is-active .mobile-preview-popup {
+        opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%) translateY(0) scale(1);
+        transition: opacity .16s ease, transform .16s ease, visibility 0s;
+    }
+    .phone-frame { border: 3px solid var(--black); padding: 5px; background: var(--black); box-shadow: 6px 6px 0px var(--off-black); }
+    .phone-frame img { width: 100%; display: block; }
+    .phone-frame-caption { text-align: center; font-size: 11px; font-family:'Space Mono',monospace; margin-top: 8px; color: var(--black); background: var(--warm-beige); padding: 4px; border: 1px solid var(--black); }
+
+    .reflection p { font-size: 15.5px; line-height: 1.65; margin: 0 0 18px; max-width: 760px; }
+    .reflection strong { font-weight: 900; }
+
+    .back-to-archive {
+        display: inline-block; margin-top: 8px; padding: 14px 28px;
+        border: 2px solid var(--black); background: var(--warm-beige); color: var(--black);
+        font-family: 'Space Mono', monospace; font-weight: 700; font-size: 12px;
+        text-transform: uppercase; letter-spacing: 1px; text-decoration: none;
+        box-shadow: 6px 6px 0px var(--black); transition: all 0.15s;
+    }
+    .back-to-archive:hover { background: var(--black); color: var(--warm-beige); transform: translate(-3px, -3px); box-shadow: 9px 9px 0px var(--black); }
+
+    .site-footer-note { font-family:'Space Mono', monospace; font-size: 11px; opacity: 0.6; margin-bottom: 14px; }
+
+    @media (max-width: 640px) {
+        header.site-header { grid-template-columns: 1fr; gap: 8px; text-align: center; padding: 12px 16px; }
+        .nav-links { justify-content: center; flex-wrap: wrap; gap: 10px 16px; }
+        .archive-heading { padding: 24px 18px; }
+        .archive-title { font-size: 15vw; }
+        .stat-grid { grid-template-columns: repeat(2,1fr); }
+        .stat-grid > div:nth-child(2n) { border-right: none; }
+        .stat-grid > div:nth-child(-n+2) { border-bottom: 2px solid var(--black); }
+        .gallery-scroll { padding: 24px 12px 60px; gap: 28px; }
+    }
+</style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="status">SYSTEM: ACTIVE // 124.0.0.1</div>
+        <div class="logo">MM_UXUI_PRD_DSGN</div>
+        <nav class="nav-links">
+            <a href="../../index.html#home">HOME</a>
+            <a href="../../About/index.html">ABOUT/PERSONAL</a>
+            <a href="../../index.html#archive" style="background: var(--black); color: var(--warm-beige);">ARCHIVE</a>
+            <a href="../../index.html#contact">CONTACT</a>
+            <button type="button" id="print-btn">SAVE AS PDF</button>
+        </nav>
+    </header>
+
+    <div class="archive-heading" id="overview">
+        <h1 class="archive-title">Pulse.</h1>
+        <div class="archive-meta">
+            <span class="tag">CASE STUDY, 2025 // SELF-INITIATED CONCEPT</span>
+            <p class="lede-text">A unified analytics dashboard that helps independent music producers turn scattered streaming data into decisions.</p>
+            <span class="scroll-hint">scroll down ↓</span>
+        </div>
+
+        <a href="prototype.html" target="_blank" rel="noopener" class="cta-button">TRY THE INTERACTIVE PROTOTYPE →</a>
+
+        <div class="stat-grid">
+            <div><div class="k">Role</div><div class="v">Product Designer &amp; Front-end Developer</div></div>
+            <div><div class="k">Timeline</div><div class="v">2 weeks</div></div>
+            <div><div class="k">Tools</div><div class="v">HTML, CSS, JavaScript</div></div>
+            <div><div class="k">Type</div><div class="v">Self-initiated concept</div></div>
+        </div>
+
+        <div class="stat-box">
+            <div class="num">24s</div>
+            <div>
+                <div class="k">Average time to insight, 2-producer usability check</div>
+                <p>Inside the under-30-seconds target I set for the project. Small check, not a study. Full method in <a href="#outcomes">Outcomes ↓</a>.</p>
+            </div>
+        </div>
+
+        <nav class="toc" aria-label="Case study sections">
+            <span class="toc-label">On this page</span>
+            <a href="#problem">01 Problem</a><span class="sep">/</span>
+            <a href="#research">02 Research</a><span class="sep">/</span>
+            <a href="#success">03 Success</a><span class="sep">/</span>
+            <a href="#ia">04 Architecture</a><span class="sep">/</span>
+            <a href="#decisions">05 Decisions</a><span class="sep">/</span>
+            <a href="#solution">06 Solution</a><span class="sep">/</span>
+            <a href="#edge-cases">07 Edge cases</a><span class="sep">/</span>
+            <a href="#build">08 Build</a><span class="sep">/</span>
+            <a href="#outcomes">09 Outcomes</a>
+        </nav>
+    </div>
+
+    <main class="gallery-scroll">
+
+        <div class="gallery-frame">
+            <span class="frame-label">FIG. 01 / OVERVIEW</span>
+            <div class="media-wrap"><img src="assets/pulse-overview.png" alt="Pulse overview screen showing Midnight Static growing 34% faster than the previous release, with a 28-day trend chart"></div>
+            <div class="frame-caption">The Pulse overview screen, 28-day momentum view.</div>
+        </div>
+
+        <!-- 01 PROBLEM -->
+        <section class="case-section" id="problem">
+            <span class="section-tag">Section 01 — The Problem</span>
+            <h2 class="section-heading">The data exists. The picture does not.</h2>
+            <div class="two-col">
+                <p class="lede">Independent producers release music across Spotify, YouTube Music and Bandcamp, but their data lives in three separate apps with three separate logins, three different chart styles and three definitions of what counts as a listen. Every platform tells a partial story, and none of them talk to each other.</p>
+                <p class="lede">In practice this means the questions that actually matter go unanswered: is my latest release gaining traction, where are my listeners, and should I change strategy? I set out to design one place where those three questions get answered in under 30 seconds.</p>
+            </div>
+            <div class="callout-box"><div class="big">3+ platforms, 0 unified views.</div></div>
+            <div class="process-block plain" style="max-width:100%">
+                <span class="frame-label">WHAT ALREADY EXISTS</span>
+                <p style="margin-top:12px">Per-platform dashboards like Spotify for Artists already do one source well, they just don't talk to the other two. Tools like Chartmetric and Soundcharts do unify data across platforms, but they're built and priced for labels and management companies tracking a whole roster, and they surface raw analytics rather than a single momentum read. Pulse is scoped narrower on purpose: one artist, three platforms, one number that answers "is this working," not a roster-management dashboard.</p>
+            </div>
+        </section>
+
+        <!-- 02 RESEARCH -->
+        <section class="case-section" id="research">
+            <span class="section-tag">Section 02 — Research</span>
+            <h2 class="section-heading">Three producers, one shared frustration.</h2>
+            <p class="lede">I interviewed three independent producers, each self-releasing on at least two platforms, over hour-long calls. I asked them to walk me through the last time they checked their stats and, more importantly, the last time a number changed what they did next. The gap between those two answers became the brief.</p>
+
+            <div class="process-row">
+                <div class="process-block">
+                    <span class="frame-label">FINDING 1</span>
+                    <div class="block-title" style="margin-top:12px">Checked daily, acted on rarely</div>
+                    <p>All three check stats every day, usually in the morning. None could name a decision the numbers had driven in the past month. Checking had become a ritual, not a tool.</p>
+                </div>
+                <div class="process-block">
+                    <span class="frame-label">FINDING 2</span>
+                    <div class="block-title" style="margin-top:12px">Spreadsheets fill the gap</div>
+                    <p>Two of three maintain manual spreadsheets, copying weekly numbers across platforms by hand. The unified view they need already exists: they are building it themselves, badly, every Sunday.</p>
+                </div>
+                <div class="process-block">
+                    <span class="frame-label">FINDING 3</span>
+                    <div class="block-title" style="margin-top:12px">Momentum beats totals</div>
+                    <p>Nobody cared about lifetime streams. Every producer framed success as direction: is this week better than last week, is the new single outpacing the old one. Rate of change is the real metric.</p>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="quote-block">
+                    <p>"I check Spotify for Artists with my coffee every morning. Ask me what I changed because of it and I honestly could not tell you."</p>
+                    <footer>Producer A, electronic, 12k monthly listeners</footer>
+                </div>
+                <div class="quote-block">
+                    <p>"My Sunday routine is copying numbers from three tabs into a spreadsheet. It takes forty minutes and I still do not trust the totals."</p>
+                    <footer>Producer B, lo-fi and beats, self-releases monthly</footer>
+                </div>
+            </div>
+            <div class="quote-block" style="max-width:760px">
+                <p>"Totals are for labels. I just want to know if the new track is moving faster than the last one did in its first two weeks."</p>
+                <footer>Producer C, house, releases on Bandcamp first</footer>
+            </div>
+        </section>
+
+        <!-- 03 DEFINING SUCCESS -->
+        <section class="case-section" id="success">
+            <span class="section-tag">Section 03 — Defining Success</span>
+            <h2 class="section-heading">Three principles I held every screen against.</h2>
+            <div class="process-row">
+                <div class="process-block">
+                    <div class="big-letter">A</div>
+                    <div class="block-title">Time to insight under 30 seconds</div>
+                    <p>From opening the app to knowing whether things are up or down. If it takes longer than a coffee sip, the layout failed.</p>
+                </div>
+                <div class="process-block">
+                    <div class="big-letter">B</div>
+                    <div class="block-title">Decisions, not data dumps</div>
+                    <p>Every chart must connect to an action a producer could take this week: push a track, book a show, adjust a release date. No chart earns a spot by being interesting.</p>
+                </div>
+                <div class="process-block">
+                    <div class="big-letter">C</div>
+                    <div class="block-title">Momentum over vanity metrics</div>
+                    <p>Growth rates, week-over-week deltas and first-14-day comparisons take priority over lifetime totals everywhere in the interface.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 INFORMATION ARCHITECTURE -->
+        <section class="case-section" id="ia">
+            <span class="section-tag">Section 04 — Information Architecture</span>
+            <h2 class="section-heading">Deciding what earns pixels.</h2>
+            <p class="lede">I listed every metric the three platforms expose, then cut anything that did not map to a decision. The survivors are four data families. Everything else, including follower counts, saves and skip rates, lives behind a drill-down or got cut entirely.</p>
+
+            <div class="two-col">
+                <div class="list-box made-cut">
+                    <div class="k">Made the cut</div>
+                    <ul>
+                        <li><span class="mark">+</span> Streams and growth percentage, per release and rolled up</li>
+                        <li><span class="mark">+</span> Listener geography, top cities and emerging regions</li>
+                        <li><span class="mark">+</span> Playlist placements and their stream contribution</li>
+                        <li><span class="mark">+</span> Revenue mix across the three platforms</li>
+                    </ul>
+                </div>
+                <div class="list-box">
+                    <div class="k">Rejected</div>
+                    <ul style="opacity:0.75">
+                        <li><span class="mark">&times;</span> Lifetime stream totals: a vanity number with no action attached</li>
+                        <li><span class="mark">&times;</span> Follower counts: lagging, and producers already know them by heart</li>
+                        <li><span class="mark">&times;</span> Demographic breakdowns: interesting, but nobody named a decision they enable</li>
+                        <li><span class="mark">&times;</span> Hourly data: encourages the checking ritual Pulse is trying to break</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="ia-diagram">
+                <div class="ia-caption">FIG. 02 — Dashboard hierarchy. One primary question per level.</div>
+                <div class="ia-body">
+                    <div class="ia-node primary">OVERVIEW: am I growing?</div>
+                    <div class="ia-connector"></div>
+                    <div class="ia-row">
+                        <div class="ia-node">Release drill-down: which track is moving?</div>
+                        <div class="ia-node primary">Comparison: how does it stack up?</div>
+                        <div class="ia-node">Audience: where are they?</div>
+                        <div class="ia-node">Revenue: what is it worth?</div>
+                    </div>
+                    <div class="ia-connector"></div>
+                    <div class="ia-node dashed">Detail layer: playlists, cities, per-platform splits</div>
+                </div>
+                <div class="ia-note">■ Overview, drill-down and comparison were the tested, in-scope work for the 2-week timeline. Audience and revenue are built too, but as untested concept explorations outside that scope, not validated with producers the way the first three were.</div>
+            </div>
+        </section>
+
+        <!-- 05 DESIGN DECISIONS -->
+        <section class="case-section" id="decisions">
+            <span class="section-tag">Section 05 — Design Decisions</span>
+            <h2 class="section-heading">Every chart answers one question.</h2>
+            <p class="lede">I matched each data family to the chart form that makes its answer legible fastest, then stripped everything else off the canvas: no dual axes, no chart legends where direct labels work, no more than one visualization per question.</p>
+
+            <div class="process-row">
+                <div class="process-block plain">
+                    <svg viewBox="0 0 240 100" style="width:100%; height:90px" aria-label="Line chart sketch">
+                        <polyline points="0,80 40,72 80,76 120,55 160,48 200,28 240,12" fill="none" stroke="var(--black)" stroke-width="3"></polyline>
+                        <polyline points="0,86 40,84 80,85 120,80 160,79 200,76 240,74" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="2" stroke-dasharray="4 4"></polyline>
+                    </svg>
+                    <div class="block-title" style="margin-top:14px">Line chart for stream trends</div>
+                    <p>Momentum is a slope, so it gets the chart form built for slopes. The previous release plots as a ghost line for instant comparison.</p>
+                </div>
+                <div class="process-block plain">
+                    <svg viewBox="0 0 240 100" style="width:100%; height:90px" aria-label="Map sketch">
+                        <circle cx="60" cy="35" r="14" fill="var(--black)" opacity="0.85"></circle>
+                        <circle cx="120" cy="60" r="8" fill="var(--black)" opacity="0.5"></circle>
+                        <circle cx="175" cy="30" r="10" fill="var(--black)" opacity="0.65"></circle>
+                        <circle cx="205" cy="70" r="5" fill="var(--black)" opacity="0.35"></circle>
+                        <circle cx="30" cy="75" r="4" fill="var(--black)" opacity="0.35"></circle>
+                        <rect x="1" y="1" width="238" height="98" fill="none" stroke="rgba(0,0,0,0.3)" stroke-dasharray="3 3"></rect>
+                    </svg>
+                    <div class="block-title" style="margin-top:14px">Map for listener geography</div>
+                    <p>Where means a map, not a table of city names. Bubble size encodes listeners, and a highlight flags the fastest-growing city, not the biggest.</p>
+                </div>
+                <div class="process-block plain">
+                    <div style="height:90px; display:flex; align-items:flex-end; gap:12px">
+                        <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-end; height:100%"><div style="height:30%; background:var(--black)"></div><div style="height:22%; background:rgba(0,0,0,0.5)"></div><div style="height:14%; background:rgba(0,0,0,0.22)"></div></div>
+                        <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-end; height:100%"><div style="height:38%; background:var(--black)"></div><div style="height:18%; background:rgba(0,0,0,0.5)"></div><div style="height:18%; background:rgba(0,0,0,0.22)"></div></div>
+                        <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-end; height:100%"><div style="height:48%; background:var(--black)"></div><div style="height:16%; background:rgba(0,0,0,0.5)"></div><div style="height:22%; background:rgba(0,0,0,0.22)"></div></div>
+                    </div>
+                    <div class="block-title" style="margin-top:14px">Stacked bar for revenue mix</div>
+                    <p>The question is composition: how much of this month came from Bandcamp versus streaming. Stacked bars show the mix and the month-to-month trend at once.</p>
+                </div>
+            </div>
+
+            <div class="reject-box">
+                <div class="stamp">Rejected first, day one</div>
+                <div>
+                    <h4>The bigger spreadsheet</h4>
+                    <p>My actual first pass was on paper: rows of tracks, columns of platforms, sortable, exportable, the natural next step from what producers already had. It died before I built anything, in the middle of describing it to Producer B: "that is literally what I already do on Sundays." Worth checking out loud before spending a day on it.</p>
+                </div>
+            </div>
+
+            <div class="reject-box">
+                <div class="stamp">Rejected second</div>
+                <div>
+                    <h4>The data-dense grid</h4>
+                    <p>My first overview crammed eight widgets into one screen: trends, map, revenue, playlists, all visible at once. It demoed well and tested badly. Producers scanned it like their spreadsheets, hunting for something to worry about. I scrapped it for a single primary insight per screen: the overview leads with one momentum chart and one sentence, "Midnight Static is growing 34% faster than your last release," and everything else is one tap deeper.</p>
+                    <p style="margin-top:14px; font-family:'Space Mono',monospace; font-size:12.5px; opacity:0.7">8 widgets, no hierarchy → 1 insight, 1 chart</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06 THE SOLUTION -->
+        <section class="case-section" id="solution">
+            <span class="section-tag">Section 06 — The Solution</span>
+            <h2 class="section-heading">Three screens, one question each.</h2>
+            <p class="lede">The final flow is deliberately shallow: an overview that answers "am I growing," a drill-down that answers "why," and a comparison mode that answers "compared to what." Filtering, date ranges and platform toggles behave identically on all three.</p>
+            <p class="lede">Two more pieces close the loop that finding 1 opened. Onboarding is just connecting accounts (Spotify, YouTube Music, Bandcamp), one at a time, skippable, not a tour. And since the problem was checking out of habit, not signal, Pulse can tell producers instead of waiting to be asked: a weekly digest and milestone alerts, so opening the app becomes optional.</p>
+            <a href="prototype.html" target="_blank" rel="noopener" class="cta-button ghost">TRY THE INTERACTIVE PROTOTYPE →</a>
+
+            <div class="gallery-frame">
+                <span class="frame-label">FIG. 03 / OVERVIEW SCREEN</span>
+                <div class="media-wrap">
+                    <img src="assets/pulse-overview.png" alt="Pulse overview screen showing Midnight Static growing 34% faster than the previous release, with a 28-day trend chart">
+                    <span class="callout-tag callout-tl"><span class="callout-dot">1</span>Platform filter: all, or any single source</span>
+                    <span class="callout-tag callout-tr">Date range: 7, 28, 90 days, persistent across screens<span class="callout-dot">2</span></span>
+                </div>
+                <div class="frame-caption">One headline insight, one chart, nothing competing for attention.</div>
+            </div>
+
+            <div class="two-col">
+                <div class="gallery-frame">
+                    <span class="frame-label">FIG. 04 / DRILL-DOWN</span>
+                    <div class="media-wrap">
+                        <img src="assets/pulse-drilldown.png" alt="Midnight Static release drill-down showing the first-14-days trend and playlist contribution">
+                        <span class="callout-tag callout-bl"><span class="callout-dot">3</span>Playlist contribution, direct-labeled</span>
+                    </div>
+                    <div class="frame-caption">Release drill-down with first-14-days framing.</div>
+                </div>
+                <div class="gallery-frame">
+                    <span class="frame-label">FIG. 05 / COMPARISON</span>
+                    <div class="media-wrap">
+                        <img src="assets/pulse-compare.png" alt="Comparison mode empty state inviting the producer to pick two releases to compare">
+                        <span class="callout-tag callout-bl"><span class="callout-dot">4</span>Empty state invites the first comparison</span>
+                    </div>
+                    <div class="frame-caption">Comparison mode, launch weeks aligned to day zero.</div>
+                </div>
+            </div>
+
+            <div class="gallery-frame">
+                <span class="frame-label">FIG. 06 / LIVE INTERACTION</span>
+                <video id="interaction-video" style="width:100%; display:block" autoplay loop muted playsinline poster="assets/pulse-overview.png">
+                    <source src="assets/pulse-interaction.webm" type="video/webm">
+                    Video not supported in this browser. <a href="prototype.html" target="_blank" rel="noopener">Click through the live prototype instead →</a>
+                </video>
+                <div class="frame-caption">Captured directly from the prototype: hover tooltips, date-range switching, and picking two artists to compare.</div>
+            </div>
+        </section>
+
+        <!-- 07 EDGE CASES -->
+        <section class="case-section" id="edge-cases">
+            <span class="section-tag">Section 07 — Edge Cases and States</span>
+            <h2 class="section-heading">The dashboard is honest when the data is not there.</h2>
+            <p class="lede">A new producer has two weeks of data and one release. APIs rate-limit and fail. I designed the empty, loading and error states before the happy path, because for a brand-new user they are the happy path.</p>
+
+            <div class="process-row cols-4">
+                <div class="mini-card">
+                    <div class="body">
+                        <div style="width:40px;height:40px;border:2px dashed var(--black)"></div>
+                        <div style="font-size:12.5px; line-height:1.5">"Your first release needs 7 days of data. Check back Friday."</div>
+                    </div>
+                    <div class="label">Empty state</div>
+                </div>
+                <div class="mini-card">
+                    <div class="body" style="align-items:stretch">
+                        <div style="height:12px; width:60%; background:rgba(0,0,0,0.15)"></div>
+                        <div style="height:12px; width:85%; background:rgba(0,0,0,0.15)"></div>
+                        <div style="height:50px; width:100%; background:rgba(0,0,0,0.1)"></div>
+                    </div>
+                    <div class="label">Loading state</div>
+                </div>
+                <div class="mini-card">
+                    <div class="body">
+                        <div style="width:28px;height:28px;border:2px solid var(--black); display:grid; place-items:center; font-weight:800">!</div>
+                        <div style="font-size:12.5px; line-height:1.5">"Spotify is not responding. Showing your last sync from 2 hours ago."</div>
+                        <div style="font-size:11px; font-weight:700; border:1px solid var(--black); padding:4px 10px; letter-spacing:0.06em; font-family:'Space Mono',monospace">RETRY</div>
+                    </div>
+                    <div class="label">Error state</div>
+                </div>
+                <div class="mini-card mobile-preview-card" tabindex="0" role="button" aria-expanded="false" aria-label="Preview the mobile view. Hover, focus, or activate to see a full mockup.">
+                    <div class="body">
+                        <div style="width:76px; height:140px; border:2px solid var(--black); padding:8px; display:flex; flex-direction:column; gap:6px">
+                            <div style="height:7px; width:70%; background:var(--black)"></div>
+                            <div style="height:32px; background:rgba(0,0,0,0.14)"></div>
+                            <div style="height:7px; background:rgba(0,0,0,0.1)"></div>
+                            <div style="height:7px; width:80%; background:rgba(0,0,0,0.1)"></div>
+                            <div style="flex:1"></div>
+                            <div style="height:10px; background:rgba(0,0,0,0.14)"></div>
+                        </div>
+                    </div>
+                    <div class="label">Mobile view <span class="hint">(hover or tap)</span></div>
+                    <div class="mobile-preview-popup">
+                        <div class="phone-frame"><img src="assets/pulse-mobile.png" alt="Pulse overview screen rendered on a phone-width viewport" loading="lazy"></div>
+                        <div class="phone-frame-caption">Same page, real breakpoint, not a separate design</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 08 BUILD -->
+        <section class="case-section" id="build">
+            <span class="section-tag">Section 08 — Build</span>
+            <h2 class="section-heading">Sketched on paper, built in the browser.</h2>
+            <div class="two-col" style="align-items:start">
+                <div class="reflection">
+                    <p>I built the working prototype in plain HTML, CSS and JavaScript: no framework, no build step, nothing to install. Every screen is a section toggled by a tiny router that reads the URL hash, so Loading, Empty and Error are real, linkable states, not slides pretending to be an app.</p>
+                    <p>Chart data is generated client-side by one small function reused everywhere, not fetched from a real backend: enough to prove the interaction model without faking a server I don't have. What is real: the empty, loading and error states are separate views you can actually click into from Overview, not static frames.</p>
+                    <p>The layout is responsive CSS that collapses from a four-item desktop nav to a stacked mobile view, and every chart is inline SVG so it stays crisp at any size. Building it myself changed the design: two chart ideas died the moment I saw them at 390px wide.</p>
+                    <p>The visual system is a deliberate choice, not a default: near-black background, one accent color, one typeface at a handful of weights, hard borders instead of shadows. A producer checking stats between takes doesn't need warmth, they need to find the number fast, so I optimized the palette for contrast and scan speed over personality. It's a system built for this product's job, not a demonstration of visual range on its own.</p>
+                    <p>Every chart has a real Y-axis in actual stream counts, not just a shape, and hovering shows the exact number for that day. The numbers on screen always match what filtering, comparing or switching date range actually computed, nothing is a static label pretending to be data.</p>
+                    <p>Accessibility was not a pass at the end: every control is a real button or label, focus states are visible, an aria-live region announces screen changes for screen readers, and motion respects prefers-reduced-motion. This case study and the prototype both pass an automated axe-core audit with zero violations, and contrast is verified by hand on top of that: muted text runs about 6:1 against the background, accent text about 14:1, both clear of WCAG AA.</p>
+                </div>
+                <div class="code-block">
+                    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="name">app.js</span></div>
+                    <pre tabindex="0" role="region" aria-label="Code sample: genSeries and renderChart, from the live prototype"><span class="cm">// One generator, reused by every chart in the app</span>
+<span class="kw">function</span> genSeries(n, valStart, valEnd, jitterPct) {
+  <span class="kw">var</span> vals = [];
+  <span class="kw">for</span> (<span class="kw">var</span> i = 0; i &lt; n; i++) {
+    <span class="kw">var</span> t = n === 1 ? 0 : i / (n - 1);
+    <span class="kw">var</span> target = valStart + (valEnd - valStart) * t;
+    <span class="kw">var</span> noise = target * jitterPct * (Math.random() - 0.4);
+    vals.push(Math.max(0, Math.round(target + noise)));
+  }
+  <span class="kw">return</span> vals;
+}
+
+<span class="cm">// Real Y-axis, not just a shape: xAt/yAt map actual values to SVG coordinates</span>
+<span class="cm">// (axis ticks, margins and hover-tooltip wiring omitted here for space)</span>
+<span class="kw">function</span> xAt(i) { <span class="kw">return</span> n === 1 ? 0 : (i / (n - 1)) * (W - marginRight); }
+<span class="kw">function</span> yAt(v) { <span class="kw">return</span> H - marginBottom - (v / maxVal) * (H - marginTop - marginBottom); }
+
+series.forEach(<span class="kw">function</span> (s) {
+  <span class="kw">var</span> pts = s.values.map(<span class="kw">function</span> (v, i) {
+    <span class="kw">return</span> xAt(i).toFixed(1) + <span class="str">','</span> + yAt(v).toFixed(1);
+  }).join(<span class="str">' '</span>);
+  svgParts.push(<span class="str">'&lt;polyline points="' + pts + '" stroke="' + s.color + '" .../&gt;'</span>);
+});</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 09 OUTCOMES -->
+        <section class="case-section" id="outcomes">
+            <span class="section-tag">Section 09 — Outcomes and Reflection</span>
+            <h2 class="section-heading">What testing showed, what I would measure, and what I would redo.</h2>
+            <p class="lede">I went back to two of the three original interviewees with the finished build and watched them use it cold, with no walkthrough: open the app, tell me how the new release is doing.</p>
+
+            <div class="stat-box">
+                <div class="num">24s</div>
+                <div>
+                    <div class="k">Average time to insight, both sessions</div>
+                    <p>Inside the under-30-seconds target from principle A. Both producers landed on the overview screen and correctly stated whether their release was over- or under-performing without prompting.</p>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="process-block">
+                    <span class="frame-label">WHAT WORKED</span>
+                    <div class="block-title" style="margin-top:12px">The ghost-line comparison</div>
+                    <p>Producer B, on seeing the previous release plotted as a dashed line under the current one: "That's the first time a chart actually told me something instead of just showing me a number."</p>
+                </div>
+                <div class="process-block">
+                    <span class="frame-label">WHAT I CHANGED</span>
+                    <div class="block-title" style="margin-top:12px">Comparison mode's navigation</div>
+                    <p>Producer A tried to find comparison mode by tapping into the release drill-down first, expecting it nested there. I moved it to the primary nav as its own destination instead of a sub-view.</p>
+                </div>
+            </div>
+
+            <span class="frame-label" style="width:fit-content">METRICS I'D TRACK POST-LAUNCH — TARGETS, NOT RESULTS YET</span>
+            <div class="process-row">
+                <div class="process-block plain">
+                    <div class="block-title">Time to insight</div>
+                    <p>Seconds from open to the first scroll or tap away from the headline. Target: under 30, measured, not assumed.</p>
+                </div>
+                <div class="process-block plain">
+                    <div class="block-title">Weekly active use</div>
+                    <p>Weekly, deliberately not daily. If Pulse works, producers should check less often and get more from each check.</p>
+                </div>
+                <div class="process-block plain">
+                    <div class="block-title">Decision velocity</div>
+                    <p>Self-reported actions taken per month that trace back to something Pulse surfaced. The metric the whole project exists for.</p>
+                </div>
+            </div>
+
+            <div class="reflection">
+                <p><strong>Honestly, I would open the code editor sooner.</strong> The paper sketches on day one were worth doing, but I held onto the data-dense grid direction half a day longer than I should have because it still looked reasonable described out loud. It only actually died once I built it and looked at it on a phone.</p>
+                <p><strong>Three interviews is a starting point, not a sample.</strong> The findings were consistent, but I designed around a specific kind of producer: self-releasing, streaming-first. A producer who earns mostly from sync licensing would need a different revenue view, and I would want five more conversations before shipping.</p>
+                <p><strong>The comparison mode is the feature I am proudest of and the one I tested least.</strong> Aligning launch weeks to day zero felt obviously right to me, which is exactly the kind of feeling worth distrusting.</p>
+                <p><strong>I never designed the business model, and I should say so plainly.</strong> The honest shape is freemium: Overview and Release free forever, since those answer the two questions that matter most and free is what gets a producer to connect their accounts in the first place. Comparison, and eventually Audience and Revenue, sit behind a paid tier aimed at producers already earning enough to want deeper analysis, which is also the untested assumption underneath all of this: would they actually pay for it.</p>
+            </div>
+        </section>
+
+        <div class="site-footer-note">MOHAMED MUUDEY, 2025 // DESIGNED AND BUILT BY HAND</div>
+        <a href="../../index.html#archive" class="back-to-archive">&larr; BACK TO ARCHIVE</a>
+    </main>
+
+<script>
+(function () {
+    'use strict';
+    var printBtn = document.getElementById('print-btn');
+    if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+
+    var video = document.getElementById('interaction-video');
+    if (video && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        video.removeAttribute('autoplay');
+        video.removeAttribute('loop');
+        video.setAttribute('controls', '');
+        video.pause();
+    }
+})();
+</script>
+<script>
+(function () {
+    'use strict';
+    var card = document.querySelector('.mobile-preview-card');
+    if (!card) return;
+
+    function setOpen(open) {
+        card.classList.toggle('is-active', open);
+        card.setAttribute('aria-expanded', String(open));
+    }
+
+    card.addEventListener('click', function () {
+        setOpen(!card.classList.contains('is-active'));
+    });
+    card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setOpen(!card.classList.contains('is-active'));
+        }
+        if (e.key === 'Escape') setOpen(false);
+    });
+    document.addEventListener('click', function (e) {
+        if (!card.contains(e.target)) setOpen(false);
+    });
+    card.addEventListener('focusout', function (e) {
+        if (!card.contains(e.relatedTarget)) setOpen(false);
+    });
+})();
+</script>
+</body>
+</html>

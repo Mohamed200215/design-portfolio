@@ -1,0 +1,407 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMEBACK // BRAND SHEET — MM_ARCHIVE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --concrete-gray: #B4B4B4;
+            --warm-beige: #D9D2C5;
+            --black: #000000;
+            --off-black: #1A1A1A;
+            --white: #F2F2F2;
+            --scanline: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: crosshair;
+        }
+
+        a, button, input[type="submit"], input[type="button"], [role="button"] { cursor: pointer; }
+
+        html, body {
+            overflow-x: hidden;
+            min-height: 100%;
+        }
+
+        body {
+            background-color: var(--concrete-gray);
+            color: var(--black);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(var(--scanline) 50%, transparent 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 101;
+            opacity: 0.3;
+        }
+
+        header {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            padding: 20px;
+            border-bottom: 2px solid var(--black);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            background-color: var(--warm-beige);
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: var(--black);
+            text-decoration: none;
+            padding: 2px 8px;
+            transition: all 0.1s;
+        }
+
+        .nav-links a:hover {
+            background: var(--black);
+            color: var(--warm-beige);
+        }
+
+        .archive-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 40px;
+            border-bottom: 4px solid var(--black);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .archive-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 64px;
+            text-transform: uppercase;
+            line-height: 0.8;
+            letter-spacing: -3px;
+        }
+
+        .archive-meta {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            text-align: right;
+            max-width: 360px;
+        }
+
+        .archive-meta .tag {
+            display: block;
+            opacity: 0.6;
+            margin-bottom: 6px;
+        }
+
+        .scroll-hint {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 14px;
+            opacity: 0.7;
+            transform: rotate(-2deg);
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        .gallery-scroll {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 80px;
+        }
+
+        .process-row {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .process-block {
+            border: 3px solid var(--black);
+            background: var(--warm-beige);
+            box-shadow: 6px 6px 0px var(--black);
+            padding: 20px;
+            position: relative;
+        }
+
+        .process-block .frame-label {
+            position: static;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .process-block p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .process-block ul {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 900px) {
+            .process-row { grid-template-columns: 1fr; }
+        }
+
+        .gallery-frame {
+            width: 100%;
+            max-width: 900px;
+            border: 3px solid var(--black);
+            box-shadow: 10px 10px 0px var(--black);
+            background: var(--off-black);
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .gallery-frame img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .frame-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--black);
+            color: var(--warm-beige);
+            padding: 4px 10px;
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            z-index: 2;
+        }
+
+        .registration-mark {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--black);
+            border-radius: 50%;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .registration-mark::before { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--black); }
+        .registration-mark::after { content: ""; position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--black); }
+
+        .reg-tl { top: 10px; left: 10px; }
+        .back-to-archive {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 14px 28px;
+            border: 2px solid var(--black);
+            background: var(--warm-beige);
+            color: var(--black);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            box-shadow: 6px 6px 0px var(--black);
+            transition: all 0.15s;
+        }
+        .back-to-archive:hover {
+            background: var(--black);
+            color: var(--warm-beige);
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px var(--black);
+        }
+        .reg-br { bottom: 10px; right: 10px; }
+
+        @media (max-width: 640px) {
+            header {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                text-align: center;
+                padding: 12px 16px;
+            }
+            .nav-links {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 10px 16px;
+            }
+            .archive-heading {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px 16px 16px;
+            }
+            .archive-title { font-size: 15vw; }
+            .archive-meta { text-align: left; max-width: none; }
+            .gallery-scroll { padding: 24px 12px 60px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-mark reg-tl"></div>
+    <div class="registration-mark reg-br"></div>
+
+    <header>
+        <div class="status">SYSTEM: ACTIVE // 124.0.0.1</div>
+        <div class="logo">MM_UXUI_PRD_DSGN</div>
+        <nav class="nav-links">
+            <a href="../../index.html#home">HOME</a>
+            <a href="../../About/index.html">ABOUT/PERSONAL</a>
+            <a href="../../index.html#archive" style="background: var(--black); color: var(--warm-beige);">ARCHIVE</a>
+            <a href="../../index.html#contact">CONTACT</a>
+        </nav>
+    </header>
+
+    <div class="archive-heading">
+        <h1 class="archive-title">Comeback</h1>
+        <div class="archive-meta">
+            <span class="tag">SELF-INITIATED // BRAND IDENTITY CONCEPT</span>
+            COMEBACK energy drink brand identity — a full system built around momentum and resilience: bolt-C logomark, electric-blue color language, custom display type, and a four-flavor lineup (Original, Watermelon, Lemon, Mango). Rolled out across packaging, apparel, street posters, and OOH billboards under one rule — flavors change color, the mark never does. No real client — a self-initiated concept built to explore a full brand system end to end.
+            <span class="scroll-hint">scroll down ↓</span>
+        </div>
+    </div>
+
+    <main class="gallery-scroll">
+        <div class="process-row">
+            <div class="process-block">
+                <span class="frame-label">THE BRIEF</span>
+                <p>Energy drinks tend to sell one of two stories: extreme-sports aggression (wings, cliff jumps) or clinical "focus" (nootropic startups). COMEBACK's brief was to own a third, more specific emotional beat — the moment right after you've been knocked down — and build a mark and voice that could physically sit on a shelf next to Red Bull, Monster, and Prime without reading as a fan-made knockoff.</p>
+            </div>
+            <div class="process-block">
+                <span class="frame-label">KEY DECISIONS</span>
+                <ul>
+                    <li>Bolt-C logomark fuses the initial with a lightning strike — "the strike is the split second the comeback begins" — one mark doing double duty as icon and story.</li>
+                    <li>Volt Blue against Midnight Navy/Chalk White carries a "spark in the dark" idea through every touchpoint, while each of the four flavors gets its own accent inside the same shell.</li>
+                    <li>"IM BACK!!" as a war-cry tagline, not a tidy slogan — built to be shouted on posters and apparel, while the can itself carries the calmer brand statement.</li>
+                    <li>Applications lean street/OOH (weathered posters, warehouse signage) over polished lifestyle photography, since the brand's whole premise is "beat up but still standing."</li>
+                </ul>
+            </div>
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">01 / WORDMARK</span>
+            <img src="01-wordmark.jpg" alt="COMEBACK wordmark lockup with lightning-storm background and IM BACK! IM BACK! IM BACK! tagline">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">02 / LOGOMARK</span>
+            <img src="02-logomark.jpg" alt="COMEBACK lightning-C logomark with tagline: The strike is the split second the comeback begins">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">03 / LOGO SYSTEM</span>
+            <img src="03-logo-system.jpg" alt="COMEBACK logo system — mark on light and dark blue, wordmark, IM BACK! lockup, bolt icon, and exclamation mark icon">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">04 / COLOR PALETTE</span>
+            <img src="04-colors.jpg" alt="COMEBACK primary color palette (Volt Blue, Chalk White, Midnight Navy, Deep Blue) and can flavour colors">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">05 / TYPOGRAPHY</span>
+            <img src="05-typography.jpg" alt="COMEBACK typography sheet — Thunderbold Demo headline face and Impact body face">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">06 / TAGLINES</span>
+            <img src="06-taglines.jpg" alt="COMEBACK tagline cards: It's never over / the return / feel the hit, and One energy / no days wasted / im back!!">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">07 / BRAND STATEMENT</span>
+            <img src="07-brand-statement.jpg" alt="COMEBACK visual identity system statement describing the bolt-C mark, IM BACK!! war cry, and electric blue brand language">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">08 / FOUR FLAVORS</span>
+            <img src="08-four-flavors.jpg" alt="Four colors, one energy — COMEBACK cans lined up in Original, Watermelon, Lemon, and Mango">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">09 / FLAVOR — ORIGINAL</span>
+            <img src="09-flavor-original.jpg" alt="COMEBACK Original flavor can spotlight — deep, clean, electric">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">10 / FLAVOR — WATERMELON</span>
+            <img src="10-flavor-watermelon.jpg" alt="COMEBACK Watermelon flavor can spotlight — cool, sweet and easy going down">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">11 / FLAVOR — LEMON</span>
+            <img src="11-flavor-lemon.jpg" alt="COMEBACK Lemon flavor can spotlight — a sharp citrus strike">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">12 / FLAVOR — MANGO</span>
+            <img src="12-flavor-mango.jpg" alt="COMEBACK Mango flavor can spotlight — warm, ripe and full-on">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">13 / STREET POSTER</span>
+            <img src="13-street-poster.jpg" alt="COMEBACK street poster mockups pasted on a weathered wall — lightning-face poster and Get Back! boxing poster">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">14 / APPAREL</span>
+            <img src="14-apparel.jpg" alt="COMEBACK apparel mockups — blue IM BACK! t-shirt and white Train Eat Sleep Comeback t-shirt">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">15 / PACKAGING</span>
+            <img src="15-packaging.jpg" alt="COMEBACK Original six-pack carrier packaging mockup on blue background">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">16 / RETAIL COOLER</span>
+            <img src="ridgestore.png" alt="COMEBACK four-flavor lineup stocked in a store cooler next to Monster and other energy drink brands">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">17 / VENDING MACHINE</span>
+            <img src="vending.png" alt="COMEBACK cans stocked in a branded office vending machine">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">18 / BILLBOARD</span>
+            <img src="16-billboard.jpg" alt="Weathered street billboard mockup for COMEBACK reading Down. Not out!">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">19 / SIGNAGE</span>
+            <img src="17-signage.jpg" alt="COMEBACK logo and Welcome Back! signage painted on a warehouse building exterior">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">20 / LIFESTYLE</span>
+            <img src="drinking.png" alt="Athlete drinking a COMEBACK Original can after a workout">
+        </div>
+        <div class="gallery-frame">
+            <span class="frame-label">21 / CLOSING</span>
+            <img src="18-closing.jpg" alt="Thank you closing card for the COMEBACK brand identity">
+        </div>
+        <a href="../../index.html#archive" class="back-to-archive">&larr; BACK TO ARCHIVE</a>
+    </main>
+</body></html>
